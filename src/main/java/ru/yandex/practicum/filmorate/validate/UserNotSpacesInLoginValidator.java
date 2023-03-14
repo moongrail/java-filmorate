@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.validate;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 public class UserNotSpacesInLoginValidator implements ConstraintValidator<ValidLoginUser, String> {
     @Override

@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +12,7 @@ import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.BindingResultErrorsUtil;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;

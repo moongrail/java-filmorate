@@ -2,10 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +9,10 @@ import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.validate.ValidBirthDayUser;
 import ru.yandex.practicum.filmorate.validate.ValidLoginUser;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
