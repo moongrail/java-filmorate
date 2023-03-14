@@ -55,7 +55,7 @@ public class UserController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.NOT_ACCEPTABLE)
+                    .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                     .body(errors.toString());
         }
 
@@ -83,7 +83,7 @@ public class UserController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.NOT_ACCEPTABLE)
+                    .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                     .body(errors.toString());
         }
 
