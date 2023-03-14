@@ -78,7 +78,7 @@ class UserControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string("[Ошибка валидации в поле - id, причина - must not be null]"));
     }
 
@@ -99,7 +99,7 @@ class UserControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string("[Ошибка валидации в поле - email," +
                         " причина - must be a well-formed email address]"));
     }
@@ -121,7 +121,7 @@ class UserControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string("[Ошибка валидации в поле - birthday," +
                         " причина - дата рождения не может быть в будущем.]"));
     }
@@ -173,7 +173,7 @@ class UserControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string("[Ошибка валидации в поле - login," +
                         " причина - В логине не должно быть пробелов.]"));
     }
@@ -195,7 +195,7 @@ class UserControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string("[Ошибка валидации в поле - login," +
                         " причина - В логине не должно быть пробелов.]"));
     }
@@ -284,7 +284,7 @@ class UserControllerTest {
                         .content(jsonUpdate)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(status().isAccepted())
                 .andExpect(content().string("[Ошибка валидации в поле - email," +
                         " причина - must be a well-formed email address]"));
     }

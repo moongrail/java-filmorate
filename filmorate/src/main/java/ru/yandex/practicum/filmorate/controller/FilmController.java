@@ -56,7 +56,7 @@ public class FilmController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                    .status(HttpStatus.ACCEPTED)
                     .body(errors.toString());
         }
 
@@ -81,7 +81,7 @@ public class FilmController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                    .status(HttpStatus.ACCEPTED)
                     .body(errors.toString());
         }
 
