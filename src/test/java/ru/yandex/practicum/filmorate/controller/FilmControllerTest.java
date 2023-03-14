@@ -99,9 +99,7 @@ class FilmControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content()
-                        .string("[Ошибка валидации в поле - description," +
-                                " причина - Длина описания не должна быть больше 200.]"));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -122,9 +120,7 @@ class FilmControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content()
-                        .string("[Ошибка валидации в поле - releaseDate, " +
-                                "причина - дата релиза должна быть не раньше 28 декабря 1895 года]"));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -145,8 +141,7 @@ class FilmControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content()
-                        .string("[Ошибка валидации в поле - duration, причина - must be greater than 0]"));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -163,8 +158,8 @@ class FilmControllerTest {
         String json = gson.toJson(build);
 
         mockMvc.perform(post(TEST_URL)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON));
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON));
 
         mockMvc.perform(post(TEST_URL)
                         .content(json)
@@ -198,8 +193,8 @@ class FilmControllerTest {
         String jsonUpdate = gson.toJson(update);
 
         mockMvc.perform(post(TEST_URL)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON));
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON));
 
         mockMvc.perform(put(TEST_URL)
                         .content(jsonUpdate)
@@ -227,6 +222,6 @@ class FilmControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Такого фильма не существует."));
+                .andExpect(content().json(json));
     }
 }

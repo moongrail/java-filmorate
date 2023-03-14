@@ -52,7 +52,7 @@ public class FilmController {
 
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(errors.toString());
+                    .body(gson.toJson(film));
 
         } else if (FILMS_MAP.containsKey(film.getId())) {
             return ResponseEntity
@@ -85,12 +85,12 @@ public class FilmController {
 
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(errors.toString());
+                    .body(gson.toJson(film));
 
         } else if (!FILMS_MAP.containsKey(film.getId())) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body("Такого фильма не существует.");
+                    .body(gson.toJson(film));
         }
 
         log.info("Обновлен фильм - {}", film);

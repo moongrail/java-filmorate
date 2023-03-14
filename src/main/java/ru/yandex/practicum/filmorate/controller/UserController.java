@@ -49,11 +49,12 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("Ошибки валидации при создании пользователя - {}", bindingResult.getAllErrors());
+//          Я считаю такой вариант красивее и понятнее
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(errors.toString());
+                    .body(gson.toJson(user));
 
         } else if (USER_MAP.containsKey(user.getId())) {
 
@@ -89,13 +90,13 @@ public class UserController {
 
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(errors.toString());
+                    .body(gson.toJson(user));
 
         } else if (!USER_MAP.containsKey(user.getId())) {
 
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body("Такого пользователя не существует.");
+                    .body(gson.toJson(user));
         }
 
         log.info("Обновлен пользователь - {}", user);
@@ -111,8 +112,8 @@ public class UserController {
     }
 
     private static void setNameIfItEmpty(User user) {
-            if (user.getName() == null || user.getName().isBlank()) {
-                user.setName(user.getLogin());
-            }
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 }

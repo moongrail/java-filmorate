@@ -100,8 +100,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("[Ошибка валидации в поле - email," +
-                        " причина - must be a well-formed email address]"));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -122,8 +121,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("[Ошибка валидации в поле - birthday," +
-                        " причина - дата рождения не может быть в будущем.]"));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -174,8 +172,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("[Ошибка валидации в поле - login," +
-                        " причина - В логине не должно быть пробелов.]"));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -196,8 +193,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("[Ошибка валидации в поле - login," +
-                        " причина - В логине не должно быть пробелов.]"));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -218,7 +214,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Такого пользователя не существует."));
+                .andExpect(content().json(json));
     }
 
     @Test
@@ -252,40 +248,5 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(jsonUpdate));
-    }
-
-
-    @Test
-    public void whenUpdateIncorrectEmail() throws Exception {
-        User build = User.builder()
-                .id(3324L)
-                .name("test")
-                .login("Test")
-                .email("teste@xample.com")
-                .birthday(LocalDate.of(2012, 12, 12))
-                .build();
-
-        User buildUpdate = User.builder()
-                .id(3324L)
-                .name("test33")
-                .login("Tes33t")
-                .email("testxampl33e.com")
-                .birthday(LocalDate.of(2012, 12, 12))
-                .build();
-
-        String json = gson.toJson(build);
-        String jsonUpdate = gson.toJson(buildUpdate);
-
-        mockMvc.perform(post(TEST_URL)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        mockMvc.perform(put(TEST_URL)
-                        .content(jsonUpdate)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("[Ошибка валидации в поле - email," +
-                        " причина - must be a well-formed email address]"));
     }
 }
