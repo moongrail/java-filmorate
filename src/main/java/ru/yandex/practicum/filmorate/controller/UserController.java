@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.util.BindingResultErrorsUtil;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -49,8 +48,6 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("Ошибки валидации при создании пользователя - {}", bindingResult.getAllErrors());
-//          Я считаю такой вариант красивее и понятнее
-            List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -85,8 +82,6 @@ public class UserController {
     public ResponseEntity<String> updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("Ошибки валидации при обновлении пользователя - {}", bindingResult.getAllErrors());
-
-            List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)

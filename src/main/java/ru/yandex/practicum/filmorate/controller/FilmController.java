@@ -10,12 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.util.BindingResultErrorsUtil;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,8 +46,6 @@ public class FilmController {
         if (bindingResult.hasErrors()) {
             log.error("Ошибки валидации при создании фильма - {}", bindingResult.getAllErrors());
 
-            List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
-
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(gson.toJson(film));
@@ -80,8 +76,6 @@ public class FilmController {
     public ResponseEntity<String> updateFilm(@RequestBody @Valid Film film, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("Ошибки валидации при обновлении фильма - {}", bindingResult.getAllErrors());
-
-            List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
