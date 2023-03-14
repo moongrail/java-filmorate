@@ -25,7 +25,7 @@ public class UserController {
     private static final Map<Long, User> USER_MAP = new HashMap<>();
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
-            .registerTypeAdapter(LocalDate.class,new LocalDateAdapter())
+            .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create();
 
     @GetMapping
@@ -44,19 +44,20 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
-        if (USER_MAP.containsKey(user.getId())) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("Такой пользователь уже существует, попробуйте обновить данные о нём.");
-
-        } else if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.error("Ошибки валидации при создании пользователя - {}", bindingResult.getAllErrors());
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
                     .status(HttpStatus.ACCEPTED)
                     .body(errors.toString());
+
+        } else if (USER_MAP.containsKey(user.getId())) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("Такой пользователь уже существует, попробуйте обновить данные о нём.");
         }
 
         log.info("Создан пользователь - {}", user);
@@ -72,12 +73,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<String> updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
-        if (!USER_MAP.containsKey(user.getId())) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Такого пользователя не существует.");
-
-        } else if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.error("Ошибки валидации при обновлении пользователя - {}", bindingResult.getAllErrors());
 
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
@@ -85,6 +81,12 @@ public class UserController {
             return ResponseEntity
                     .status(HttpStatus.ACCEPTED)
                     .body(errors.toString());
+
+        } else if (!USER_MAP.containsKey(user.getId())) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Такого пользователя не существует.");
         }
 
         log.info("Обновлен пользователь - {}", user);
