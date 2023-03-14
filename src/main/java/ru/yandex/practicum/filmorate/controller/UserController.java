@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.util.BindingResultErrorsUtil;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +23,16 @@ import java.util.Map;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
+    private static Long index = 0L;
     private static final Map<Long, User> USER_MAP = new HashMap<>();
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
+            .serializeNulls()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create();
 
     @GetMapping
-    public ResponseEntity<String> getFilms() {
+    public ResponseEntity<List<User>> getFilms() {
         if (USER_MAP.isEmpty()) {
             return ResponseEntity
                     .notFound()
@@ -39,7 +42,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(USER_MAP.values().toString()));
+                .body(new ArrayList<>(USER_MAP.values()));
     }
 
     @PostMapping
@@ -49,19 +52,25 @@ public class UserController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(errors.toString());
 
         } else if (USER_MAP.containsKey(user.getId())) {
 
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
                     .body("Такой пользователь уже существует, попробуйте обновить данные о нём.");
         }
 
         log.info("Создан пользователь - {}", user);
-        USER_MAP.put(user.getId(), user);
+
+        if (user.getId() == null) {
+            user.setId(++index);
+            USER_MAP.put(user.getId(), user);
+        } else {
+            USER_MAP.put(user.getId(), user);
+            index++;
+        }
 
         setNameIfItEmpty(user);
 
@@ -79,13 +88,13 @@ public class UserController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(errors.toString());
 
         } else if (!USER_MAP.containsKey(user.getId())) {
 
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.NOT_FOUND)
                     .body("Такого пользователя не существует.");
         }
 
@@ -102,8 +111,8 @@ public class UserController {
     }
 
     private static void setNameIfItEmpty(User user) {
-        if (user.getName().isEmpty() || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
+            if (user.getName() == null || user.getName().isBlank()) {
+                user.setName(user.getLogin());
+            }
     }
 }

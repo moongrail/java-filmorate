@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Film {
-    @NotNull
     private Long id;
     @NotEmpty
     private String name;
@@ -23,7 +22,6 @@ public class Film {
     private String description;
     @ValidDateFilm
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @NotNull
     private LocalDate releaseDate;
     @Positive
     @Max(value = 6500, message = "должно быть не больше 6500 минут.")

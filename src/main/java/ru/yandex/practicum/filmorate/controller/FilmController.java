@@ -22,7 +22,7 @@ import java.util.Map;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-
+    private static Long index = 0L;
     private static final Map<Long, Film> FILMS_MAP = new HashMap<>();
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -51,7 +51,7 @@ public class FilmController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(errors.toString());
 
         } else if (FILMS_MAP.containsKey(film.getId())) {
@@ -62,7 +62,14 @@ public class FilmController {
         }
 
         log.info("Создан фильм - {}", film);
-        FILMS_MAP.put(film.getId(), film);
+
+        if (film.getId() == null) {
+            film.setId(++index);
+            FILMS_MAP.put(film.getId(), film);
+        } else {
+            FILMS_MAP.put(film.getId(), film);
+            index++;
+        }
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -77,12 +84,12 @@ public class FilmController {
             List<String> errors = BindingResultErrorsUtil.getErrors(bindingResult);
 
             return ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(errors.toString());
 
         } else if (!FILMS_MAP.containsKey(film.getId())) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.NOT_FOUND)
                     .body("Такого фильма не существует.");
         }
 

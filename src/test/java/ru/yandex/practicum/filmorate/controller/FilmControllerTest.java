@@ -45,7 +45,7 @@ class FilmControllerTest {
     @SneakyThrows
     public void whenPostIsCorrect() {
         Film build = Film.builder()
-                .id(1L)
+                .id(1123L)
                 .name("test")
                 .description("test")
                 .duration(100L)
@@ -78,8 +78,7 @@ class FilmControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isAccepted())
-                .andExpect(content().string("[Ошибка валидации в поле - id, причина - must not be null]"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -99,7 +98,7 @@ class FilmControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isAccepted())
+                .andExpect(status().isBadRequest())
                 .andExpect(content()
                         .string("[Ошибка валидации в поле - description," +
                                 " причина - Длина описания не должна быть больше 200.]"));
@@ -122,7 +121,7 @@ class FilmControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isAccepted())
+                .andExpect(status().isBadRequest())
                 .andExpect(content()
                         .string("[Ошибка валидации в поле - releaseDate, " +
                                 "причина - дата релиза должна быть не раньше 28 декабря 1895 года]"));
@@ -145,7 +144,7 @@ class FilmControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isAccepted())
+                .andExpect(status().isBadRequest())
                 .andExpect(content()
                         .string("[Ошибка валидации в поле - duration, причина - must be greater than 0]"));
     }
@@ -227,7 +226,7 @@ class FilmControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(content().string("Такого фильма не существует."));
     }
 }

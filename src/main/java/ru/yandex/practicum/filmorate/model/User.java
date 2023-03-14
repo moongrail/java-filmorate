@@ -20,7 +20,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @NotNull
     private Long id;
     @NotBlank
     @Email
@@ -31,7 +30,6 @@ public class User {
     private String name;
     @ValidBirthDayUser
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @NotNull
     private LocalDate birthday;
 
 }
