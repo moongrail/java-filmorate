@@ -214,7 +214,6 @@ class FilmControllerTest {
                 .releaseDate(LocalDate.of(2012, 12, 12))
                 .build();
 
-
         String json = gson.toJson(build);
 
         mockMvc.perform(put(TEST_URL)
