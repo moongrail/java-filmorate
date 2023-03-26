@@ -14,9 +14,11 @@ public interface FilmService {
 
     void deleteById(Long id);
 
-    void addLike(Long userId);
+    void addLike(Long id, Long userId);
 
-    void removeLike(Long userId);
+    void removeLike(Long id, Long userId);
 
     List<Film> getPopularFilms(short count);
+
+    List<Film> getAll();
 }

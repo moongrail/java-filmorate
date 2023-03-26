@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,18 +11,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
-    private static Long index = 0L;
-    private static final Map<Long, Film> FILMS_MAP = new HashMap<>();
+    private final FilmService filmService;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
@@ -29,7 +29,7 @@ public class FilmController {
 
     @GetMapping
     public ResponseEntity<String> getFilms() {
-        if (FILMS_MAP.isEmpty()) {
+        if (filmService.getAll().isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();
@@ -38,7 +38,7 @@ public class FilmController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(FILMS_MAP.values()));
+                .body(gson.toJson(filmService.getAll()));
     }
 
     @PostMapping
@@ -50,28 +50,16 @@ public class FilmController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(gson.toJson(film));
 
-        } else if (FILMS_MAP.containsKey(film.getId())) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Такой фильм уже существует, попробуйте обновить данные о нём.");
-
         }
+
+        filmService.add(film);
 
         log.info("Создан фильм - {}", film);
-
-        if (film.getId() == null) {
-            film.setId(++index);
-            FILMS_MAP.put(film.getId(), film);
-        } else {
-            FILMS_MAP.put(film.getId(), film);
-            index++;
-        }
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(film));
     }
-
     @PutMapping
     public ResponseEntity<String> updateFilm(@RequestBody @Valid Film film, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -81,14 +69,11 @@ public class FilmController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(gson.toJson(film));
 
-        } else if (!FILMS_MAP.containsKey(film.getId())) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(gson.toJson(film));
         }
 
+        filmService.update(film);
         log.info("Обновлен фильм - {}", film);
-        FILMS_MAP.put(film.getId(), film);
+
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)

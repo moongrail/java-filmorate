@@ -3,12 +3,12 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -29,16 +29,27 @@ public class InMemoryFilmStorage implements FilmStorage {
             return Optional.empty();
         }
 
-        filmStorage.put(++index, film);
+        film.setId(++index);
+        filmStorage.put(film.getId(), film);
 
         return Optional.of(film);
     }
 
     @Override
+    public Optional<Film> getById(Long id) {
+        if (filmStorage.containsKey(id)) {
+            return Optional.of(filmStorage.get(id));
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<Film> getAll() {
-        return filmStorage.values()
+        List<Film> films = filmStorage.values()
                 .stream()
-                .toList();
+                .collect(Collectors.toList());
+
+        return films;
     }
 
     @Override

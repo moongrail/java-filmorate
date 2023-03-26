@@ -18,7 +18,7 @@ public interface UserService {
 
     void removeFriend(Long idFrom, Long idTo);
 
-    List<User> getFriends(Long id);
+    List<Long> getFriendsId(Long id);
 
-    List<User> getMutualFriends(Long from, Long to);
+    List<Long> getMutualFriends(Long from, Long to);
 }
