@@ -12,7 +12,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserStorage userStorage;
 
     @Override

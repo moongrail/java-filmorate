@@ -20,6 +20,7 @@ public interface UserService {
     List<User> getFriends(Long id);
 
     List<User> getMutualFriends(Long from, Long to);
+
     List<User> getAll();
 
     User getById(Long id);
