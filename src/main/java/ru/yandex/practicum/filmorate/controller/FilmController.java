@@ -55,6 +55,7 @@ public class FilmController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(film));
     }
+
     @PutMapping
     public ResponseEntity<String> updateFilm(@RequestBody @Valid Film film, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
