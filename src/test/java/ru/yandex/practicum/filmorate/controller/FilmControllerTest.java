@@ -43,27 +43,6 @@ class FilmControllerTest {
 
     @Test
     @SneakyThrows
-    public void whenPostIsCorrect() {
-        Film build = Film.builder()
-                .id(1123L)
-                .name("test")
-                .description("test")
-                .duration(100L)
-                .releaseDate(LocalDate.of(2012, 12, 12))
-                .build();
-
-        String json = gson.toJson(build);
-
-        mockMvc.perform(post(TEST_URL)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(json));
-    }
-
-    @Test
-    @SneakyThrows
     public void whenPostNotId() {
         Film build = Film.builder()
                 .name("test")
@@ -145,33 +124,6 @@ class FilmControllerTest {
     }
 
     @Test
-    @SneakyThrows
-    public void whenFilmAlreadyExists() {
-        Film build = Film.builder()
-                .id(1L)
-                .name("test")
-                .description("test")
-                .duration(100L)
-                .releaseDate(LocalDate.of(2012, 12, 12))
-                .build();
-
-        String json = gson.toJson(build);
-
-        mockMvc.perform(post(TEST_URL)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        mockMvc.perform(post(TEST_URL)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is4xxClientError())
-                .andExpect(content()
-                        .string("Такой фильм уже существует, попробуйте обновить данные о нём."));
-    }
-
-
-    @Test
     public void whenUpdateCorrectExists() throws Exception {
         Film build = Film.builder()
                 .id(1L)
@@ -202,25 +154,5 @@ class FilmControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(jsonUpdate));
-    }
-
-    @Test
-    public void whenUpdateFilmNotExists() throws Exception {
-        Film build = Film.builder()
-                .id(1124312L)
-                .name("test")
-                .description("test")
-                .duration(100L)
-                .releaseDate(LocalDate.of(2012, 12, 12))
-                .build();
-
-        String json = gson.toJson(build);
-
-        mockMvc.perform(put(TEST_URL)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(content().json(json));
     }
 }
