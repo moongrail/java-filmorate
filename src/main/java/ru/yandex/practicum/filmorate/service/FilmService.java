@@ -3,14 +3,13 @@ package ru.yandex.practicum.filmorate.service;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FilmService {
-    Optional<Film> add(Film film);
+    Film add(Film film);
 
-    Optional<Film> update(Film film);
+    Film update(Film film);
 
-    Optional<Film> updateById(Long id, Film film);
+    Film updateById(Long id, Film film);
 
     void deleteById(Long id);
 
@@ -21,4 +20,6 @@ public interface FilmService {
     List<Film> getPopularFilms(short count);
 
     List<Film> getAll();
+
+    Film getById(Long id);
 }

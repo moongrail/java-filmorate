@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.HashMap;
@@ -23,7 +22,8 @@ public class InMemoryUserStorage implements UserStorage {
             return Optional.empty();
         }
 
-        user.setId(++index);
+        user.setId(getId());
+        setNameIfItEmpty(user);
         userStorage.put(user.getId(), user);
 
         return Optional.of(user);
@@ -54,6 +54,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
 
         user.setId(id);
+        setNameIfItEmpty(user);
         userStorage.put(id, user);
 
         return Optional.of(user);
@@ -72,5 +73,16 @@ public class InMemoryUserStorage implements UserStorage {
             return Optional.of(userStorage.get(id));
         }
         return Optional.empty();
+    }
+
+    private static void setNameIfItEmpty(User user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+    }
+
+
+    private static Long getId() {
+        return ++index;
     }
 }

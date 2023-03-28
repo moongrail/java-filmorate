@@ -17,4 +17,5 @@ public interface UserStorage {
     void delete(Long id);
 
     Optional<User> getById(Long id);
+
 }

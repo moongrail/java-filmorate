@@ -15,6 +15,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -29,12 +30,6 @@ public class FilmController {
 
     @GetMapping
     public ResponseEntity<String> getFilms() {
-        if (filmService.getAll().isEmpty()) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
-
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,6 +68,56 @@ public class FilmController {
 
         filmService.update(film);
         log.info("Обновлен фильм - {}", film);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(gson.toJson(film));
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public ResponseEntity<String> addLikeFilm(@PathVariable Long id,
+                                              @PathVariable Long userId) {
+
+        filmService.addLike(id,userId);
+        log.info("Лайк поставлен фильм с айди - {}", id);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(gson.toJson("Лайк поставлен."));
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public ResponseEntity<String> removeLikeFilm(@PathVariable String id,
+                                              @PathVariable String userId) {
+
+        filmService.removeLike(Long.valueOf(id),Long.valueOf(userId));
+        log.info("Лайк убран. фильм с айди - {}", id);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(gson.toJson("Лайк убран."));
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<String> getPopularFilms(@RequestParam(defaultValue = "10") String count) {
+
+        List<Film> popularFilms = filmService.getPopularFilms(Short.parseShort(count));
+        log.info("Выданы популярные фильмы, число - {}", count);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(gson.toJson(popularFilms));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getFilmById(@PathVariable String id) {
+
+        Film film = filmService.getById(Long.valueOf(id));
+        log.info("Выдан фильм с айди - {}", id);
 
         return ResponseEntity
                 .ok()

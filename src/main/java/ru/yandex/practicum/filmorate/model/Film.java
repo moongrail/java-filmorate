@@ -26,5 +26,5 @@ public class Film {
     @Max(value = 6500, message = "должно быть не больше 6500 минут.")
     private Long duration;
     private Set<Long> usersWhoLike;
-    private Long likes;
+    private long likes;
 }

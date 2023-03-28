@@ -29,10 +29,14 @@ public class InMemoryFilmStorage implements FilmStorage {
             return Optional.empty();
         }
 
-        film.setId(++index);
+        film.setId(getId());
         filmStorage.put(film.getId(), film);
 
         return Optional.of(film);
+    }
+
+    private static Long getId() {
+        return ++index;
     }
 
     @Override
@@ -54,6 +58,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Optional<Film> update(Film film) {
+
         if (!filmStorage.containsKey(film.getId())) {
             return Optional.empty();
         }
