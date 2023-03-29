@@ -2,13 +2,17 @@ package ru.yandex.practicum.filmorate.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.validate.ValidBirthDayUser;
 import ru.yandex.practicum.filmorate.validate.ValidLoginUser;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +21,6 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "friendsId")
 public class User {
     private Long id;
     @NotBlank

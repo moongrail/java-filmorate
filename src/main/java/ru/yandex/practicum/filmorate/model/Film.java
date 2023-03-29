@@ -12,7 +12,6 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "usersWhoLike")
 public class Film {
     private Long id;
     @NotEmpty
