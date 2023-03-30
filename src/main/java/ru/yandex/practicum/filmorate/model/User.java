@@ -12,8 +12,9 @@ import ru.yandex.practicum.filmorate.validate.ValidLoginUser;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -31,5 +32,5 @@ public class User {
     @ValidBirthDayUser
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
-
+    private Set<Long> friendsId = new HashSet<>();
 }

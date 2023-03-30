@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,20 +11,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
-    private static Long index = 0L;
-    private static final Map<Long, User> USER_MAP = new HashMap<>();
+    private final UserService userService;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
@@ -32,7 +31,9 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<User>> getFilms() {
-        if (USER_MAP.isEmpty()) {
+        List<User> all = userService.getAll();
+
+        if (all.isEmpty()) {
             return ResponseEntity
                     .notFound()
                     .build();
@@ -41,7 +42,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ArrayList<>(USER_MAP.values()));
+                .body(all);
     }
 
     @PostMapping
@@ -53,24 +54,10 @@ public class UserController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(gson.toJson(user));
 
-        } else if (USER_MAP.containsKey(user.getId())) {
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Такой пользователь уже существует, попробуйте обновить данные о нём.");
         }
 
+        userService.add(user);
         log.info("Создан пользователь - {}", user);
-
-        if (user.getId() == null) {
-            user.setId(++index);
-            USER_MAP.put(user.getId(), user);
-        } else {
-            USER_MAP.put(user.getId(), user);
-            index++;
-        }
-
-        setNameIfItEmpty(user);
 
         return ResponseEntity
                 .ok()
@@ -87,18 +74,11 @@ public class UserController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(gson.toJson(user));
 
-        } else if (!USER_MAP.containsKey(user.getId())) {
-
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(gson.toJson(user));
         }
 
         log.info("Обновлен пользователь - {}", user);
 
-        USER_MAP.put(user.getId(), user);
-
-        setNameIfItEmpty(user);
+        userService.update(user);
 
         return ResponseEntity
                 .ok()
@@ -106,9 +86,68 @@ public class UserController {
                 .body(gson.toJson(user));
     }
 
-    private static void setNameIfItEmpty(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getUserById(@PathVariable Long id) {
+        User user = userService.getById(id);
+        log.info("Выдан пользователь с айди - {}", user);
+
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(gson.toJson(user));
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<String> addToFriends(@PathVariable Long id,
+                                               @PathVariable Long friendId) {
+
+
+        userService.addFriend(id, friendId);
+        log.info("Добавлен друг {} пользователю {}", friendId, id);
+
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("Друг добавлен.");
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<String> removeFromFriends(@PathVariable Long id,
+                                                    @PathVariable Long friendId) {
+
+        userService.removeFriend(id, friendId);
+        log.info("Удалён друг {} пользователю {}", friendId, id);
+
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("Друг удалён.");
+    }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<String> getUserFriends(@PathVariable String id) {
+        List<User> friendsId = userService.getFriends(Long.valueOf(id));
+        log.info("Выданы айди друзей пользователя с айди - {}", id);
+
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(gson.toJson(friendsId));
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<String> getUserFriends(@PathVariable String id, @PathVariable String otherId) {
+        List<User> mutualFriends = userService.getMutualFriends(Long.valueOf(id), Long.valueOf(otherId));
+        log.info("Общие друзья пользователя {} и {}", id, otherId);
+
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(gson.toJson(mutualFriends));
     }
 }

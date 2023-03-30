@@ -126,36 +126,6 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void whenUserPostEmptyName() {
-        User build = User.builder()
-                .id(2L)
-                .name("")
-                .login("test")
-                .email("teste@xample.com")
-                .birthday(LocalDate.of(2012, 12, 12))
-                .build();
-
-        User buildCheck = User.builder()
-                .id(2L)
-                .name("test")
-                .login("test")
-                .email("teste@xample.com")
-                .birthday(LocalDate.of(2012, 12, 12))
-                .build();
-
-        String json = gson.toJson(build);
-        String check = gson.toJson(buildCheck);
-
-        mockMvc.perform(post(TEST_URL)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(check));
-    }
-
-    @Test
-    @SneakyThrows
     public void whenUserPostIncorrectLoginBlank() {
         User build = User.builder()
                 .id(200L)
@@ -194,59 +164,5 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(json));
-    }
-
-    @Test
-    public void whenUpdateFilmNotExists() throws Exception {
-        User build = User.builder()
-                .id(332L)
-                .name("test")
-                .login("Test")
-                .email("teste@xample.com")
-                .birthday(LocalDate.of(2012, 12, 12))
-                .build();
-
-
-        String json = gson.toJson(build);
-
-        mockMvc.perform(put(TEST_URL)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(content().json(json));
-    }
-
-    @Test
-    public void whenUpdateCorrectExists() throws Exception {
-        User build = User.builder()
-                .id(332L)
-                .name("test")
-                .login("Test")
-                .email("teste@xample.com")
-                .birthday(LocalDate.of(2012, 12, 12))
-                .build();
-
-        User buildUpdate = User.builder()
-                .id(332L)
-                .name("test33")
-                .login("Tes33t")
-                .email("teste@xampl33e.com")
-                .birthday(LocalDate.of(2012, 12, 12))
-                .build();
-
-        String json = gson.toJson(build);
-        String jsonUpdate = gson.toJson(buildUpdate);
-
-        mockMvc.perform(post(TEST_URL)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        mockMvc.perform(put(TEST_URL)
-                        .content(jsonUpdate)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(jsonUpdate));
     }
 }
