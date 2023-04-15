@@ -32,5 +32,6 @@ public class User {
     @ValidBirthDayUser
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
+    @Builder.Default
     private Set<Long> friendsId = new HashSet<>();
 }

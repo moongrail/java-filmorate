@@ -23,7 +23,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
 
         user.setId(getId());
-        setNameIfItEmpty(user);
         userStorage.put(user.getId(), user);
 
         return Optional.of(user);
@@ -54,7 +53,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
 
         user.setId(id);
-        setNameIfItEmpty(user);
         userStorage.put(id, user);
 
         return Optional.of(user);
@@ -74,13 +72,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
         return Optional.empty();
     }
-
-    private static void setNameIfItEmpty(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-    }
-
 
     private static Long getId() {
         return ++index;

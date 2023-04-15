@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.validate.ValidDateFilm;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Builder
@@ -23,7 +23,12 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     @Max(value = 6500, message = "должно быть не больше 6500 минут.")
-    private Long duration;
-    private Set<Long> usersWhoLike;
+    private Integer duration;
+    @Builder.Default
+    private Set<Long> usersWhoLike = new HashSet<>();
     private long likes;
+    @NotNull
+    private Map<String,Integer> ratingId;
+    @Builder.Default
+    private List<Genre> genres = new ArrayList<>();
 }
