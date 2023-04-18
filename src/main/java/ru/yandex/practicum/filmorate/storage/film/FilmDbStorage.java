@@ -30,14 +30,12 @@ public class FilmDbStorage implements FilmStorage {
             "LEFT JOIN FILM_MPA M ON F.FILM_ID = M.FILM_ID " +
             "LEFT JOIN MPA MP ON M.MPA_ID = MP.MPA_ID " +
             "ORDER BY F.FILM_ID ";
-
     private static final String FIND_GENRES =
             "SELECT f.genre_id AS id, g.genre_name AS name " +
                     "FROM film_genre f " +
                     "LEFT JOIN  genre g ON f.genre_id = g.genre_id " +
                     "WHERE f.film_id = ? " +
                     "ORDER BY g.genre_id DESC";
-
     private static final String FIND_TOP_FILMS = "SELECT F.FILM_ID AS ID, F.NAME, F.RELEASE_DATE, F.DESCRIPTION," +
             " F.DURATION, F.RATE, COUNT(L.USER_ID) AS liked, M.MPA_ID, MP.MPA_NAME " +
             "FROM FILM F " +
@@ -47,20 +45,16 @@ public class FilmDbStorage implements FilmStorage {
             "GROUP BY F.FILM_ID " +
             "ORDER BY LIKED DESC LIMIT ?";
     private static final String FIND_FILM_BY_ID = "SELECT * FROM film WHERE film_id = ?";
-
     private static final String FIND_FILM_FULL =
             "SELECT F.FILM_ID  AS ID, F.NAME, F.RELEASE_DATE, F.DESCRIPTION, F.DURATION, F.RATE, " +
                     "M.mpa_id, MP.MPA_NAME  FROM FILM F " +
                     "LEFT JOIN FILM_MPA M ON F.FILM_ID = M.FILM_ID " +
                     "LEFT JOIN MPA MP ON M.MPA_ID = MP.mpa_id " +
                     "WHERE F.FILM_ID=? ";
-
     private static final String INSERT_LIKE = "INSERT INTO likes (film_id, user_id) VALUES (?,?)";
-
     private static final String DELETE_LIKE = "DELETE FROM likes WHERE film_id=? AND user_id=? ";
     private static final String DELETE_BY_ID = "DELETE FROM film WHERE film_id = ?";
     private static final String DELETE_FILM_GENRE = "DELETE FROM film_genre WHERE film_id=? AND genre_id=? ";
-
     private static final String DELETE_FILM_RATING = "DELETE FROM film_mpa WHERE film_id=? AND mpa_id=? ";
     private static final String INSERT_FILM_RATING = "INSERT INTO FILM_mpa (film_id, mpa_id) VALUES (?,?)";
     private static final String INSERT_FILM_GENRE = "INSERT INTO FILM_GENRE (film_id, genre_id) VALUES (?,?)";
@@ -209,6 +203,7 @@ public class FilmDbStorage implements FilmStorage {
             film.setGenres(genres);
             films.put(filmId, film);
         }
+
         return films;
     }
 

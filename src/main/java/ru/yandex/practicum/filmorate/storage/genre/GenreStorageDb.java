@@ -15,11 +15,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GenreStorageDb implements GenreStorage {
     private static final String FIND_ALL = "SELECT * FROM genre";
-
     private static final String FIND_BY_ID = "SELECT * FROM genre WHERE genre_id=?";
-
     private final JdbcTemplate jdbcTemplate;
-
 
     @Override
     public List<Genre> getAll() {

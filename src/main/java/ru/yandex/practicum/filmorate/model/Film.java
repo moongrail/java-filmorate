@@ -29,5 +29,5 @@ public class Film {
     private long rate;
     private Mpa mpa;
     @Builder.Default
-    private Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));;
+    private Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));
 }
