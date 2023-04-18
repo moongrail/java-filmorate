@@ -26,9 +26,8 @@ public class Film {
     private Integer duration;
     @Builder.Default
     private Set<Long> usersWhoLike = new HashSet<>();
-    private long likes;
-    @NotNull
-    private Map<String,Integer> ratingId;
+    private long rate;
+    private Mpa mpa;
     @Builder.Default
-    private List<Genre> genres = new ArrayList<>();
+    private Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));;
 }

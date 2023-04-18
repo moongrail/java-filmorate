@@ -1,16 +1,12 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.user;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserDbStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
 
@@ -69,6 +65,8 @@ public class UserServiceImpl implements UserService {
             User userFrom = from.get();
             User userTo = to.get();
 
+            userStorage.addFriend(idFrom, idTo);
+
             userFrom.getFriendsId().add(userTo.getId());
             userTo.getFriendsId().add(userFrom.getId());
 
@@ -92,13 +90,8 @@ public class UserServiceImpl implements UserService {
                 return;
             }
 
-            if (userFrom.getFriendsId().contains(to) && userTo.getFriendsId().contains(from)) {
-                userFrom.getFriendsId().remove(userTo.getId());
-                userTo.getFriendsId().remove(userFrom.getId());
+            userStorage.removeFriend(idFrom, idTo);
 
-                userStorage.update(userFrom);
-                userStorage.update(userTo);
-            }
         } else {
             throw new UserNotFoundException("Пользователя с таким айди нет в списке друзей.");
         }

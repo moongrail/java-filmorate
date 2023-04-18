@@ -1,6 +1,5 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.film;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -79,5 +78,25 @@ public class InMemoryFilmStorage implements FilmStorage {
         filmStorage.put(id, film);
 
         return Optional.of(film);
+    }
+
+    @Override
+    public void addLike(Long filmId, Long userId) {
+
+    }
+
+    @Override
+    public void removeLike(Long filmId, Long userId) {
+
+    }
+
+    @Override
+    public List<Film> getTheMostPopularFilms(int count) {
+        return null;
+    }
+
+    @Override
+    public Film getFilmFull(Long id) {
+        return null;
     }
 }
