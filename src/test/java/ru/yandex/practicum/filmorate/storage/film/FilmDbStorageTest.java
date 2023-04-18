@@ -42,7 +42,7 @@ class FilmDbStorageTest {
 
         Optional<Film> save = filmDbStorage.save(film);
 
-        assertThat(Objects.equals(film,save.get())).isTrue();
+        assertThat(Objects.equals(film, save.get())).isTrue();
     }
 
     @Test
@@ -118,7 +118,7 @@ class FilmDbStorageTest {
 
         Optional<Film> update = filmDbStorage.update(film);
 
-        assertThat(Objects.equals(film,update.get())).isTrue();
+        assertThat(Objects.equals(film, update.get())).isTrue();
     }
 
     @Test
@@ -186,7 +186,7 @@ class FilmDbStorageTest {
         addFilmsInDb();
         addUsersInDb();
 
-        filmDbStorage.addLike(1L,1L);
+        filmDbStorage.addLike(1L, 1L);
 
         Optional<Film> byId = filmDbStorage.getById(1L);
 
@@ -198,7 +198,7 @@ class FilmDbStorageTest {
         addFilmsInDb();
         addUsersInDb();
 
-        filmDbStorage.removeLike(1L,1L);
+        filmDbStorage.removeLike(1L, 1L);
 
         Optional<Film> byId = filmDbStorage.getById(1L);
 
@@ -209,7 +209,7 @@ class FilmDbStorageTest {
     void containsFilm() {
     }
 
-    private void addFilmsInDb(){
+    private void addFilmsInDb() {
         Film film1 = Film.builder()
                 .name("test1")
                 .description("test description")
