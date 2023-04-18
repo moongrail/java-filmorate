@@ -14,8 +14,8 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class MpaStorageDb implements MpaStorage {
-    private final static String FIND_ALL = "SELECT * FROM MPA";
-    private final static String FIND_BY_ID = "SELECT * FROM MPA WHERE MPA_ID = ?";
+    private static final String FIND_ALL = "SELECT * FROM MPA";
+    private static final String FIND_BY_ID = "SELECT * FROM MPA WHERE MPA_ID = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Override
