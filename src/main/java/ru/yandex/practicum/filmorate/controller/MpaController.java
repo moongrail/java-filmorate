@@ -18,7 +18,7 @@ import ru.yandex.practicum.filmorate.service.mpa.MpaService;
 @Slf4j
 public class MpaController {
     private final MpaService mpaService;
-    Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @GetMapping
     public ResponseEntity<String> getGenres() {

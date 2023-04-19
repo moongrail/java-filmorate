@@ -9,18 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @UtilityClass
-public  class BindingResultErrorsUtil {
+public class BindingResultErrorsUtil {
     public static List<String> getErrors(BindingResult errors) {
         List<String> errorsList = new ArrayList<>();
         FieldError fieldError = null;
         ObjectError objectError = null;
 
         for (Object object : errors.getAllErrors()) {
-            if(object instanceof FieldError) {
+            if (object instanceof FieldError) {
                 fieldError = (FieldError) object;
             }
-            if(object instanceof ObjectError) {
-                 objectError = (ObjectError) object;
+            if (object instanceof ObjectError) {
+                objectError = (ObjectError) object;
 
             }
             errorsList.add(String.format("Ошибка валидации в поле - %s, причина - %s",

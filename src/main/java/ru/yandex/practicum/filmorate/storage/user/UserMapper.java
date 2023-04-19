@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
 
+@UtilityClass
 public class UserMapper {
 
     public static User makeUser(ResultSet rs, JdbcTemplate jdbcTemplate) throws SQLException {

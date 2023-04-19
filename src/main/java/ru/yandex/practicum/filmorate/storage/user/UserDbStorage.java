@@ -123,7 +123,6 @@ public class UserDbStorage implements UserStorage {
         return Optional.ofNullable(getUser(friendId));
     }
 
-    @Override
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
         return new ArrayList<>(jdbcTemplate
                 .query(FIND_COMMON_FRIENDS, this::mapRowToUser, userId, otherUserId));
@@ -143,12 +142,10 @@ public class UserDbStorage implements UserStorage {
         return jdbcTemplate.queryForObject(FIND_USER_BY_ID, this::mapRowToUser, id);
     }
 
-    @Override
     public void removeFriend(Long userId, Long friendId) {
         jdbcTemplate.update(DELETE_FRIEND, userId, friendId);
     }
 
-    @Override
     public List<User> getFriends(Long userId) {
         return new ArrayList<>(jdbcTemplate.query(FIND_FRIENDS_BY_ID, this::mapRowToUser, userId));
     }

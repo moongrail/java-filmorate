@@ -24,13 +24,7 @@ class UserDbStorageTest {
 
     @Test
     void testSaveCorrect() {
-        User build = User.builder()
-                .id(1L)
-                .name("Test")
-                .email("test@mail.ru")
-                .login("testLogin")
-                .birthday(LocalDate.EPOCH)
-                .build();
+        User build = saveUser();
 
         Optional<User> save = userStorage.save(build);
 
@@ -39,11 +33,7 @@ class UserDbStorageTest {
 
     @Test
     void testSaveIncorrect() {
-        User build = User.builder()
-                .name("Test")
-                .login("test Login")
-                .birthday(LocalDate.EPOCH)
-                .build();
+        User build = saveUserError();
 
         Optional<User> save = userStorage.save(build);
 
@@ -67,13 +57,7 @@ class UserDbStorageTest {
     void updateCorrect() {
         addUsersInDb();
 
-        User updateUser = User.builder()
-                .id(1L)
-                .name("updateUser")
-                .email("updateUser@mail.ru")
-                .login("updateUserLogin")
-                .birthday(LocalDate.EPOCH)
-                .build();
+        User updateUser = updateUser();
 
         Optional<User> update = userStorage.update(updateUser);
 
@@ -84,13 +68,7 @@ class UserDbStorageTest {
     void updateIncorrect() {
         addUsersInDb();
 
-        User updateUser = User.builder()
-                .id(666L)
-                .name("updateUser")
-                .email("updateUser@mail.ru")
-                .login("updateUserLogin")
-                .birthday(LocalDate.EPOCH)
-                .build();
+        User updateUser = updateUserError();
 
         Optional<User> update = userStorage.update(updateUser);
 
@@ -167,7 +145,7 @@ class UserDbStorageTest {
     void removeFriend() {
         addUsersInDb();
 
-        userStorage.removeFriend(3L,   4L);
+        userStorage.removeFriend(3L, 4L);
 
         assertThat(userStorage.getFriends(3L).isEmpty()).isTrue();
         assertThat(userStorage.getFriends(4L).isEmpty()).isTrue();
@@ -238,5 +216,43 @@ class UserDbStorageTest {
         userStorage.save(test6);
         userStorage.save(test3);
         userStorage.save(test4);
+    }
+
+    private static User saveUserError() {
+        return User.builder()
+                .name("Test")
+                .login("test Login")
+                .birthday(LocalDate.EPOCH)
+                .build();
+    }
+
+    private static User saveUser() {
+        return User.builder()
+                .id(1L)
+                .name("Test")
+                .email("test@mail.ru")
+                .login("testLogin")
+                .birthday(LocalDate.EPOCH)
+                .build();
+    }
+
+    private static User updateUser() {
+        return User.builder()
+                .id(1L)
+                .name("updateUser")
+                .email("updateUser@mail.ru")
+                .login("updateUserLogin")
+                .birthday(LocalDate.EPOCH)
+                .build();
+    }
+
+    private static User updateUserError() {
+        return User.builder()
+                .id(666L)
+                .name("updateUser")
+                .email("updateUser@mail.ru")
+                .login("updateUserLogin")
+                .birthday(LocalDate.EPOCH)
+                .build();
     }
 }

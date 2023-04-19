@@ -12,15 +12,14 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Deprecated
 public class InMemoryFilmStorage implements FilmStorage {
     private static Long index = 0L;
     private final Map<Long, Film> filmStorage = new HashMap<>();
 
     @Override
     public void delete(Long id) {
-        if (filmStorage.containsKey(id)) {
-            filmStorage.remove(id);
-        }
+        filmStorage.remove(id);
     }
 
     @Override
@@ -82,21 +81,21 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void addLike(Long filmId, Long userId) {
-
+        throw new UnsupportedOperationException("Not supported yet");
     }
 
     @Override
     public void removeLike(Long filmId, Long userId) {
-
+        throw new UnsupportedOperationException("Not supported yet");
     }
 
     @Override
     public List<Film> getTheMostPopularFilms(int count) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet");
     }
 
     @Override
     public Film getFilmFull(Long id) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet");
     }
 }

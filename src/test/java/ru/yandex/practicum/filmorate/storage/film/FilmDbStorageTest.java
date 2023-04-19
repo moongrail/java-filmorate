@@ -28,34 +28,18 @@ class FilmDbStorageTest {
 
     @Test
     void saveCorrect() {
-        Film film = Film.builder()
-                .name("test")
-                .description("test description")
-                .releaseDate(LocalDate.EPOCH)
-                .duration(100)
-                .rate(100)
-                .mpa(Mpa.builder()
-                        .id(1L)
-                        .name("G")
-                        .build())
-                .build();
+        Film film = getFilm();
 
         Optional<Film> save = filmDbStorage.save(film);
 
         assertThat(Objects.equals(film, save.get())).isTrue();
     }
 
+
+
     @Test
     void saveInCorrect() {
-        Film film = Film.builder()
-                .name("test")
-                .description("test description")
-                .duration(100)
-                .mpa(Mpa.builder()
-                        .id(1L)
-                        .name("G")
-                        .build())
-                .build();
+        Film film = getFilmError();
 
         Optional<Film> save = filmDbStorage.save(film);
 
@@ -103,40 +87,20 @@ class FilmDbStorageTest {
     void updateCorrect() {
         addFilmsInDb();
 
-        Film film = Film.builder()
-                .id(1L)
-                .name("update")
-                .description("update description")
-                .releaseDate(LocalDate.EPOCH)
-                .duration(100)
-                .rate(100)
-                .mpa(Mpa.builder()
-                        .id(2L)
-                        .name("PG")
-                        .build())
-                .build();
+        Film film = getFilmUpdate();
 
         Optional<Film> update = filmDbStorage.update(film);
 
         assertThat(Objects.equals(film, update.get())).isTrue();
     }
 
+
+
     @Test
     void updateIncorrect() {
         addFilmsInDb();
 
-        Film film = Film.builder()
-                .id(3331L)
-                .name("update")
-                .description("update description")
-                .releaseDate(LocalDate.EPOCH)
-                .duration(100)
-                .rate(100)
-                .mpa(Mpa.builder()
-                        .id(2L)
-                        .name("PG")
-                        .build())
-                .build();
+        Film film = getFilmUpdateError();
 
         Optional<Film> update = filmDbStorage.update(film);
 
@@ -260,5 +224,61 @@ class FilmDbStorageTest {
                 .build();
 
         userStorage.save(test1);
+    }
+
+    private static Film getFilm() {
+        Film film = Film.builder()
+                .name("test")
+                .description("test description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(100)
+                .rate(100)
+                .mpa(Mpa.builder()
+                        .id(1L)
+                        .name("G")
+                        .build())
+                .build();
+        return film;
+    }
+
+    private static Film getFilmError(){
+        return Film.builder()
+                .name("test")
+                .description("test description")
+                .duration(100)
+                .mpa(Mpa.builder()
+                        .id(1L)
+                        .name("G")
+                        .build())
+                .build();
+    }
+
+    private Film getFilmUpdate() {
+        return  Film.builder()
+                .id(1L)
+                .name("update")
+                .description("update description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(100)
+                .rate(100)
+                .mpa(Mpa.builder()
+                        .id(2L)
+                        .name("PG")
+                        .build())
+                .build();
+    }
+    private Film getFilmUpdateError() {
+        return  Film.builder()
+                .id(3331L)
+                .name("update")
+                .description("update description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(100)
+                .rate(100)
+                .mpa(Mpa.builder()
+                        .id(2L)
+                        .name("PG")
+                        .build())
+                .build();
     }
 }

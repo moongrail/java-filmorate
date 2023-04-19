@@ -35,7 +35,7 @@ public class FilmDbStorage implements FilmStorage {
                     "FROM film_genre f " +
                     "LEFT JOIN  genre g ON f.genre_id = g.genre_id " +
                     "WHERE f.film_id = ? " +
-                    "ORDER BY g.genre_id DESC";
+                    "ORDER BY g.genre_id";
     private static final String FIND_TOP_FILMS = "SELECT F.FILM_ID AS ID, F.NAME, F.RELEASE_DATE, F.DESCRIPTION," +
             " F.DURATION, F.RATE, COUNT(L.USER_ID) AS liked, M.MPA_ID, MP.MPA_NAME " +
             "FROM FILM F " +
@@ -190,7 +190,6 @@ public class FilmDbStorage implements FilmStorage {
 
             film.setMpa(mpa);
             Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));
-            ;
 
             SqlRowSet rsGenres = jdbcTemplate.queryForRowSet(FIND_GENRES, filmId);
             while (rsGenres.next()) {
