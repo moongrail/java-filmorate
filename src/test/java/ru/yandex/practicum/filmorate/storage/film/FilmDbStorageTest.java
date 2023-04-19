@@ -36,7 +36,6 @@ class FilmDbStorageTest {
     }
 
 
-
     @Test
     void saveInCorrect() {
         Film film = getFilmError();
@@ -93,8 +92,6 @@ class FilmDbStorageTest {
 
         assertThat(Objects.equals(film, update.get())).isTrue();
     }
-
-
 
     @Test
     void updateIncorrect() {
@@ -169,10 +166,6 @@ class FilmDbStorageTest {
         assertThat(byId.get().getRate()).isEqualTo(99);
     }
 
-    @Test
-    void containsFilm() {
-    }
-
     private void addFilmsInDb() {
         Film film1 = Film.builder()
                 .name("test1")
@@ -241,7 +234,7 @@ class FilmDbStorageTest {
         return film;
     }
 
-    private static Film getFilmError(){
+    private static Film getFilmError() {
         return Film.builder()
                 .name("test")
                 .description("test description")
@@ -254,7 +247,7 @@ class FilmDbStorageTest {
     }
 
     private Film getFilmUpdate() {
-        return  Film.builder()
+        return Film.builder()
                 .id(1L)
                 .name("update")
                 .description("update description")
@@ -267,8 +260,9 @@ class FilmDbStorageTest {
                         .build())
                 .build();
     }
+
     private Film getFilmUpdateError() {
-        return  Film.builder()
+        return Film.builder()
                 .id(3331L)
                 .name("update")
                 .description("update description")
