@@ -1,11 +1,11 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +33,6 @@ public class FilmServiceImpl implements FilmService {
         if (update.isEmpty()) {
             throw new FilmNotFoundException("Несуществующий идентификатор фильма");
         }
-
         return update.get();
     }
 
@@ -62,9 +61,9 @@ public class FilmServiceImpl implements FilmService {
         if (filmStorageById.isEmpty()) {
             throw new FilmNotFoundException("Ошибка, данный фильм не найден.");
         }
-
+        filmStorage.addLike(id, userId);
         Film film = filmStorageById.get();
-        film.setLikes(film.getLikes() + 1);
+        film.setRate(film.getRate() + 1);
 
         Set<Long> usersWhoLike = film.getUsersWhoLike();
 
@@ -94,10 +93,11 @@ public class FilmServiceImpl implements FilmService {
             throw new FilmNotFoundException("Ошибка, данный фильм не найден.");
         }
 
+        filmStorage.removeLike(id, userId);
         Film film = filmStorageById.get();
 
-        if (film.getLikes() > 1) {
-            film.setLikes(film.getLikes() - 1);
+        if (film.getRate() > 1) {
+            film.setRate(film.getRate() - 1);
 
             Set<Long> usersWhoLike = film.getUsersWhoLike();
 
@@ -115,14 +115,14 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> getPopularFilms(short count) {
 
-        List<Film> all = filmStorage.getAll();
+        List<Film> all = filmStorage.getTheMostPopularFilms(count);
 
         if (all == null) {
             return new ArrayList<>();
         }
 
         List<Film> chartFilms = all.stream()
-                .sorted(Comparator.comparing(Film::getLikes).reversed())
+                .sorted(Comparator.comparing(Film::getRate).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
 
@@ -143,5 +143,15 @@ public class FilmServiceImpl implements FilmService {
         }
 
         return filmOptional.get();
+    }
+
+    @Override
+    public Film getFilmFull(Long id) {
+        Film filmFull = filmStorage.getFilmFull(id);
+
+        if (filmFull == null) {
+            throw new FilmNotFoundException("Фильма с таким айди нет.");
+        }
+        return filmFull;
     }
 }

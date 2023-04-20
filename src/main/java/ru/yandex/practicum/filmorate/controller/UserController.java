@@ -11,16 +11,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
     private final Gson gson = new GsonBuilder()

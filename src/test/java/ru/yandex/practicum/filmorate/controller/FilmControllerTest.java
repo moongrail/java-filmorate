@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -47,7 +48,7 @@ class FilmControllerTest {
         Film build = Film.builder()
                 .name("test")
                 .description("test")
-                .duration(100L)
+                .duration(100)
                 .releaseDate(LocalDate.of(2012, 12, 12))
                 .build();
 
@@ -57,7 +58,7 @@ class FilmControllerTest {
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -67,7 +68,7 @@ class FilmControllerTest {
                 .id(2L)
                 .name("test")
                 .description("Организационная структура регулятивного органа представлена Аудиторским департаментом и Советом директоров, во главе которых находится Исполнительный директор. Организация имеет несколько отделов, каждый из которых занят выполнением своих прямых обязанностей: Надзор за деятельностью компаний, Регистрация и лицензирование, Отдел по вопросам международной торговой зоны, Исследовательский отдел, Страховой, Служба поддержки. Следует заметить, что решение вопросов, касающихся компаний, которые ведут деятельность, связанную с азартными играми, возлагается на отдельный соответствующий отдел.")
-                .duration(100L)
+                .duration(100)
                 .releaseDate(LocalDate.of(2012, 12, 12))
                 .build();
 
@@ -88,7 +89,7 @@ class FilmControllerTest {
                 .id(3L)
                 .name("test")
                 .description("test description")
-                .duration(100L)
+                .duration(100)
                 .releaseDate(LocalDate.of(1000, 12, 12))
                 .build();
 
@@ -109,7 +110,7 @@ class FilmControllerTest {
                 .id(3L)
                 .name("test")
                 .description("test description")
-                .duration(-9L)
+                .duration(-9)
                 .releaseDate(LocalDate.of(2000, 12, 12))
                 .build();
 
@@ -129,7 +130,10 @@ class FilmControllerTest {
                 .id(1L)
                 .name("test")
                 .description("test")
-                .duration(100L)
+                .mpa(Mpa.builder()
+                        .id(1L)
+                        .build())
+                .duration(100)
                 .releaseDate(LocalDate.of(2012, 12, 12))
                 .build();
 
@@ -137,7 +141,10 @@ class FilmControllerTest {
                 .id(1L)
                 .name("test33")
                 .description("test")
-                .duration(1330L)
+                .mpa(Mpa.builder()
+                        .id(1L)
+                        .build())
+                .duration(1330)
                 .releaseDate(LocalDate.of(2012, 12, 12))
                 .build();
 

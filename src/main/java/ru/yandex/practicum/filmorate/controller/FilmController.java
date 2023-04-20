@@ -11,7 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -19,8 +19,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/films")
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class FilmController {
     private final FilmService filmService;
     private final Gson gson = new GsonBuilder()
@@ -117,7 +117,7 @@ public class FilmController {
     @GetMapping("/{id}")
     public ResponseEntity<String> getFilmById(@PathVariable String id) {
 
-        Film film = filmService.getById(Long.valueOf(id));
+        Film film = filmService.getFilmFull(Long.valueOf(id));
         log.info("Выдан фильм с айди - {}", id);
 
         return ResponseEntity

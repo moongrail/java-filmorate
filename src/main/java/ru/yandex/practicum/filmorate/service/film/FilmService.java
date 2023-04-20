@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -22,4 +22,6 @@ public interface FilmService {
     List<Film> getAll();
 
     Film getById(Long id);
+
+    Film getFilmFull(Long id);
 }
