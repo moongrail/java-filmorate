@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Deprecated
 public class InMemoryUserStorage implements UserStorage {
     private static Long index = 0L;
     private final Map<Long, User> userStorage = new HashMap<>();
@@ -72,27 +71,7 @@ public class InMemoryUserStorage implements UserStorage {
         return Optional.empty();
     }
 
-    @Override
-    public Optional<User> addFriend(Long userId, Long friendId) {
-        return Optional.empty();
-    }
-
     private static Long getId() {
         return ++index;
-    }
-
-    @Override
-    public List<User> getCommonFriends(Long userId, Long otherUserId) {
-        throw new UnsupportedOperationException("Not supported yet");
-    }
-
-    @Override
-    public void removeFriend(Long userId, Long friendId) {
-        throw new UnsupportedOperationException("Not supported yet");
-    }
-
-    @Override
-    public List<User> getFriends(Long userId) {
-        throw new UnsupportedOperationException("Not supported yet");
     }
 }

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Deprecated
 public class InMemoryFilmStorage implements FilmStorage {
     private static Long index = 0L;
     private final Map<Long, Film> filmStorage = new HashMap<>();
@@ -77,25 +76,5 @@ public class InMemoryFilmStorage implements FilmStorage {
         filmStorage.put(id, film);
 
         return Optional.of(film);
-    }
-
-    @Override
-    public void addLike(Long filmId, Long userId) {
-        throw new UnsupportedOperationException("Not supported yet");
-    }
-
-    @Override
-    public void removeLike(Long filmId, Long userId) {
-        throw new UnsupportedOperationException("Not supported yet");
-    }
-
-    @Override
-    public List<Film> getTheMostPopularFilms(int count) {
-        throw new UnsupportedOperationException("Not supported yet");
-    }
-
-    @Override
-    public Film getFilmFull(Long id) {
-        throw new UnsupportedOperationException("Not supported yet");
     }
 }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Qualifier("filmDbStorage")
 @RequiredArgsConstructor
 @Primary
-public class FilmDbStorage implements FilmStorage {
+public class FilmDbStorage extends InMemoryFilmStorage {
     private static final String INSERT_FILM = "INSERT INTO film(name,description,release_date,duration,rate)" +
             " VALUES (?,?,?,?,?)";
     private static final String FIND_ALL_FILMS = "SELECT f.film_id AS ID, f.name, f.RELEASE_DATE, F.DESCRIPTION," +
@@ -97,7 +97,6 @@ public class FilmDbStorage implements FilmStorage {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    @Override
     public Film getFilmFull(Long id) {
         return getListOfFilms(FIND_FILM_FULL, id).get(id);
     }
@@ -206,13 +205,11 @@ public class FilmDbStorage implements FilmStorage {
         return films;
     }
 
-    @Override
     public List<Film> getTheMostPopularFilms(int count) {
         ArrayList<Film> films = new ArrayList<>(getListOfFilms(FIND_TOP_FILMS, count).values());
         return films.stream().sorted(Comparator.comparing(Film::getRate).reversed()).collect(Collectors.toList());
     }
 
-    @Override
     public void addLike(Long filmId, Long userId) {
         Optional<Film> byId = getById(filmId);
 
@@ -225,7 +222,6 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(INSERT_LIKE, filmId, userId);
     }
 
-    @Override
     public void removeLike(Long filmId, Long userId) {
         Optional<Film> byId = getById(filmId);
 

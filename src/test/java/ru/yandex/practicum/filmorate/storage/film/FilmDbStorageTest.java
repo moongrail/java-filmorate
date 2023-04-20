@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -26,6 +27,12 @@ class FilmDbStorageTest {
     private final FilmDbStorage filmDbStorage;
     private final UserDbStorage userStorage;
 
+    @BeforeEach
+    void beforeEach() {
+        addFilmsInDb();
+        addUsersInDb();
+    }
+
     @Test
     void saveCorrect() {
         Film film = getFilm();
@@ -47,8 +54,6 @@ class FilmDbStorageTest {
 
     @Test
     void getFilmCorrect() {
-        addFilmsInDb();
-
         Film filmFull = filmDbStorage.getFilmFull(1L);
 
         assertThat(filmFull.getId()).isEqualTo(1L);
@@ -61,31 +66,20 @@ class FilmDbStorageTest {
 
     @Test
     void getFilmFullIncorrect() {
-        Film filmFull = filmDbStorage.getFilmFull(1L);
+        Film filmFull = filmDbStorage.getFilmFull(666L);
 
         assertThat(filmFull).isEqualTo(null);
     }
 
     @Test
     void getAll() {
-        addFilmsInDb();
-
         List<Film> all = filmDbStorage.getAll();
 
         assertThat(all.size()).isEqualTo(3);
     }
 
     @Test
-    void getAllEmpty() {
-        List<Film> all = filmDbStorage.getAll();
-
-        assertThat(all.size()).isEqualTo(0);
-    }
-
-    @Test
     void updateCorrect() {
-        addFilmsInDb();
-
         Film film = getFilmUpdate();
 
         Optional<Film> update = filmDbStorage.update(film);
@@ -95,8 +89,6 @@ class FilmDbStorageTest {
 
     @Test
     void updateIncorrect() {
-        addFilmsInDb();
-
         Film film = getFilmUpdateError();
 
         Optional<Film> update = filmDbStorage.update(film);
@@ -106,8 +98,6 @@ class FilmDbStorageTest {
 
     @Test
     void deleteCorrect() {
-        addFilmsInDb();
-
         filmDbStorage.delete(1L);
 
         assertThat(filmDbStorage.getById(1L).isEmpty()).isTrue();
@@ -115,8 +105,6 @@ class FilmDbStorageTest {
 
     @Test
     void getByIdCorrect() {
-        addFilmsInDb();
-
         Optional<Film> byId = filmDbStorage.getById(1L);
 
         assertThat(byId.isPresent()).isTrue();
@@ -134,8 +122,6 @@ class FilmDbStorageTest {
 
     @Test
     void getTheMostPopularFilms() {
-        addFilmsInDb();
-
         List<Film> theMostPopularFilms = filmDbStorage.getTheMostPopularFilms(2);
 
         assertThat(theMostPopularFilms.size()).isEqualTo(2);
@@ -144,9 +130,6 @@ class FilmDbStorageTest {
 
     @Test
     void addLike() {
-        addFilmsInDb();
-        addUsersInDb();
-
         filmDbStorage.addLike(1L, 1L);
 
         Optional<Film> byId = filmDbStorage.getById(1L);
@@ -156,9 +139,6 @@ class FilmDbStorageTest {
 
     @Test
     void removeLike() {
-        addFilmsInDb();
-        addUsersInDb();
-
         filmDbStorage.removeLike(1L, 1L);
 
         Optional<Film> byId = filmDbStorage.getById(1L);

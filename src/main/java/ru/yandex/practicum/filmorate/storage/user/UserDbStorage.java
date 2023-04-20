@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Qualifier("userDbStorage")
 @RequiredArgsConstructor
 @Primary
-public class UserDbStorage implements UserStorage {
+public class UserDbStorage extends InMemoryUserStorage {
     private static final String INSERT_USER = "INSERT INTO users(email,login,name,birthday) VALUES (?,?,?,?)";
     private static final String FIND_ALL_USERS = "SELECT * FROM users";
     private static final String FIND_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
@@ -113,7 +113,6 @@ public class UserDbStorage implements UserStorage {
         }
     }
 
-    @Override
     public Optional<User> addFriend(Long userId, Long friendId) {
         if (getById(userId).isEmpty() || getById(friendId).isEmpty()) {
             return Optional.empty();
