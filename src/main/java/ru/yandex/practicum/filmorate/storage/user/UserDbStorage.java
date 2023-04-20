@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Qualifier("userDbStorage")
 @RequiredArgsConstructor
 @Primary
-public class UserDbStorage extends InMemoryUserStorage {
+public class UserDbStorage implements UserStorage {
     private static final String INSERT_USER = "INSERT INTO users(email,login,name,birthday) VALUES (?,?,?,?)";
     private static final String FIND_ALL_USERS = "SELECT * FROM users";
     private static final String FIND_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
@@ -122,6 +122,7 @@ public class UserDbStorage extends InMemoryUserStorage {
         return Optional.ofNullable(getUser(friendId));
     }
 
+    @Override
     public List<User> getCommonFriends(Long userId, Long otherUserId) {
         return new ArrayList<>(jdbcTemplate
                 .query(FIND_COMMON_FRIENDS, this::mapRowToUser, userId, otherUserId));
@@ -141,10 +142,12 @@ public class UserDbStorage extends InMemoryUserStorage {
         return jdbcTemplate.queryForObject(FIND_USER_BY_ID, this::mapRowToUser, id);
     }
 
+    @Override
     public void removeFriend(Long userId, Long friendId) {
         jdbcTemplate.update(DELETE_FRIEND, userId, friendId);
     }
 
+    @Override
     public List<User> getFriends(Long userId) {
         return new ArrayList<>(jdbcTemplate.query(FIND_FRIENDS_BY_ID, this::mapRowToUser, userId));
     }

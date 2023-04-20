@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Qualifier("filmDbStorage")
 @RequiredArgsConstructor
 @Primary
-public class FilmDbStorage extends InMemoryFilmStorage {
+public class FilmDbStorage implements FilmStorage {
     private static final String INSERT_FILM = "INSERT INTO film(name,description,release_date,duration,rate)" +
             " VALUES (?,?,?,?,?)";
     private static final String FIND_ALL_FILMS = "SELECT f.film_id AS ID, f.name, f.RELEASE_DATE, F.DESCRIPTION," +
@@ -205,11 +205,13 @@ public class FilmDbStorage extends InMemoryFilmStorage {
         return films;
     }
 
+    @Override
     public List<Film> getTheMostPopularFilms(int count) {
         ArrayList<Film> films = new ArrayList<>(getListOfFilms(FIND_TOP_FILMS, count).values());
         return films.stream().sorted(Comparator.comparing(Film::getRate).reversed()).collect(Collectors.toList());
     }
 
+    @Override
     public void addLike(Long filmId, Long userId) {
         Optional<Film> byId = getById(filmId);
 
@@ -222,6 +224,7 @@ public class FilmDbStorage extends InMemoryFilmStorage {
         jdbcTemplate.update(INSERT_LIKE, filmId, userId);
     }
 
+    @Override
     public void removeLike(Long filmId, Long userId) {
         Optional<Film> byId = getById(filmId);
 
