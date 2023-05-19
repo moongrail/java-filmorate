@@ -34,6 +34,12 @@ public class ErrorHandler {
         );
     }
 
+    @ExceptionHandler(ReviewNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlerValidationException(ReviewNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
     @ExceptionHandler(MpaNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handlerValidationException(MpaNotFoundException e) {
