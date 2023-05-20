@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.*;
@@ -153,5 +154,25 @@ public class FilmServiceImpl implements FilmService {
             throw new FilmNotFoundException("Фильма с таким айди нет.");
         }
         return filmFull;
+    }
+
+    @Override
+    public List<Film> getPopularFilmsByParameters(Short count, Long genreId, Integer year) {
+        if (genreId == 0 && year == 0) return getPopularFilms(count);
+        List<Film> films = filmStorage.getTheMostPopularFilms(Short.MAX_VALUE);
+        if (genreId > 0) {
+            films.removeIf(f -> !(getGenreIdsForCurrentFilm(f).contains(genreId)));
+        }
+        if (year > 0) {
+            films.removeIf(f -> f.getReleaseDate().getYear() != year);
+        }
+        return films.stream().sorted(Comparator.comparing(Film::getRate).reversed())
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> getGenreIdsForCurrentFilm(Film film) {
+        Set<Genre> genres = film.getGenres();
+        return genres.stream().map(Genre::getId).collect(Collectors.toList());
     }
 }

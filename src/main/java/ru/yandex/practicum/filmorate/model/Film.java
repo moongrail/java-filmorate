@@ -26,6 +26,8 @@ public class Film {
     private Integer duration;
     @Builder.Default
     private Set<Long> usersWhoLike = new HashSet<>();
+    @Builder.Default
+    private List<Director> directors = new ArrayList<>();
     private long rate;
     private Mpa mpa;
     @Builder.Default
