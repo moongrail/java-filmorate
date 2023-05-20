@@ -24,4 +24,6 @@ public interface FilmService {
     Film getById(Long id);
 
     Film getFilmFull(Long id);
+
+    List<Film> getPopularFilmsByParameters(Short count, Long genreId, Integer year);
 }

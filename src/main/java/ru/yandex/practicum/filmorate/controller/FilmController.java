@@ -15,7 +15,6 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -103,15 +102,14 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<String> getPopularFilms(@RequestParam(defaultValue = "10") String count) {
-
-        List<Film> popularFilms = filmService.getPopularFilms(Short.parseShort(count));
-        log.info("Выданы популярные фильмы, число - {}", count);
-
+    public ResponseEntity<String> getPopularFilms(@RequestParam(required = false, defaultValue = "10") Short count,
+                                                  @RequestParam(required = false, defaultValue = "0") Long genreId,
+                                                  @RequestParam(required = false, defaultValue = "0") Integer year) {
+        log.info("GET request with parameters: count = {}, genreId = {}, date = {}", count, genreId, year);
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(popularFilms));
+                .body(gson.toJson(filmService.getPopularFilmsByParameters(count, genreId, year)));
     }
 
     @GetMapping("/{id}")
