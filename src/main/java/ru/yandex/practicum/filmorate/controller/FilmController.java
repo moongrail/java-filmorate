@@ -79,7 +79,7 @@ public class FilmController {
     public ResponseEntity<String> addLikeFilm(@PathVariable Long id,
                                               @PathVariable Long userId) {
 
-        filmService.addLike(id,userId);
+        filmService.addLike(id, userId);
         log.info("Лайк поставлен фильм с айди - {}", id);
 
         return ResponseEntity
@@ -90,9 +90,9 @@ public class FilmController {
 
     @DeleteMapping("/{id}/like/{userId}")
     public ResponseEntity<String> removeLikeFilm(@PathVariable String id,
-                                              @PathVariable String userId) {
+                                                 @PathVariable String userId) {
 
-        filmService.removeLike(Long.valueOf(id),Long.valueOf(userId));
+        filmService.removeLike(Long.valueOf(id), Long.valueOf(userId));
         log.info("Лайк убран. фильм с айди - {}", id);
 
         return ResponseEntity

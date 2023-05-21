@@ -1,4 +1,3 @@
-
 package ru.yandex.practicum.filmorate.util.collaborative_filtering;
 
 import lombok.experimental.UtilityClass;
@@ -25,7 +24,7 @@ public class SlopeOne {
         outputData.clear();
         inputData = data;
         buildDifferencesMatrix(inputData);
-        Map<User, Map<Film, Double>> correctedInputData  = inputData;
+        Map<User, Map<Film, Double>> correctedInputData = inputData;
         //Если есть конкретный заказ на юзера, то прогнозирую оценки только для него
         if (forUser != null) {
             correctedInputData = Map.of(forUser, inputData.get(forUser));

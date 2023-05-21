@@ -38,9 +38,9 @@ public class FilmDbStorage implements FilmStorage {
                     "ORDER BY g.genre_id";
 
     private static final String FIND_LIKES =
-        "SELECT l.user_id " +
-                "FROM likes l " +
-                "WHERE l.film_id = ? ";
+            "SELECT l.user_id " +
+                    "FROM likes l " +
+                    "WHERE l.film_id = ? ";
     private static final String FIND_TOP_FILMS = "SELECT F.FILM_ID AS ID, F.NAME, F.RELEASE_DATE, F.DESCRIPTION," +
             " F.DURATION, F.RATE, COUNT(L.USER_ID) AS liked, M.MPA_ID, MP.MPA_NAME " +
             "FROM FILM F " +

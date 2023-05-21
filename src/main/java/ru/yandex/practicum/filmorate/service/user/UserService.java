@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service.user;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public interface UserService {

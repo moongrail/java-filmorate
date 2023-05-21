@@ -14,5 +14,6 @@ public @interface ValidDateFilm {
     String message() default "дата релиза должна быть не раньше 28 декабря 1895 года";
 
     Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default  {};
+
+    Class<? extends Payload>[] payload() default {};
 }
