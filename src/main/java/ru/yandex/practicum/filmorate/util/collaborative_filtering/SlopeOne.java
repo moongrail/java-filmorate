@@ -1,44 +1,44 @@
 
-package ru.yandex.practicum.filmorate.service.user.collaborative_filtering;
+package ru.yandex.practicum.filmorate.util.collaborative_filtering;
 
+import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
-/**
- * Slope One algorithm implementation
- */
+@UtilityClass
 public class SlopeOne {
 
     private static Map<Film, Map<Film, Double>> diff = new HashMap<>();
     private static Map<Film, Map<Film, Integer>> freq = new HashMap<>();
     private static Map<User, Map<Film, Double>> inputData;
     private static Map<User, Map<Film, Double>> outputData = new HashMap<>();
+    public static User forUser;
 
-    public static void slopeOne(Map<User, Map<Film, Double>> data) {
+
+    public static List<Film> slopeOne(Map<User, Map<Film, Double>> data) {
+        diff.clear();
+        freq.clear();
+        outputData.clear();
         inputData = data;
-        System.out.println("Slope One - Before the Prediction\n");
         buildDifferencesMatrix(inputData);
-
-        System.out.println("-".repeat(1000));
-        System.out.println(diff);
-        System.out.println("-".repeat(1000));
-
-        System.out.println("\nSlope One - With Predictions\n");
-        predict(inputData);
+        Map<User, Map<Film, Double>> correctedInputData  = inputData;
+        //Если есть конкретный заказ на юзера, то прогнозирую оценки только для него
+        if (forUser != null) {
+            correctedInputData = Map.of(forUser, inputData.get(forUser));
+        }
+        predict(correctedInputData);
+        return outputData.values().stream()
+                .flatMap(x -> x.entrySet().stream().filter(y -> y.getValue() > 0))
+                .sorted(Entry.comparingByValue())
+                .map(Entry::getKey)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
-    /**
-     * Based on the available data, calculate the relationships between the
-     * items and number of occurences
-     *
-     * @param data
-     *            existing user data and their items' ratings
-     */
     private static void buildDifferencesMatrix(Map<User, Map<Film, Double>> data) {
         for (Map<Film, Double> user : data.values()) {
             for (Entry<Film, Double> e : user.entrySet()) {
@@ -68,19 +68,11 @@ public class SlopeOne {
                 diff.get(j).put(i, oldValue / count);
             }
         }
-        printData(data);
     }
 
-    /**
-     * Based on existing data predict all missing ratings. If prediction is not
-     * possible, the value will be equal to -1
-     *
-     * @param data
-     *            existing user data and their items' ratings
-     */
     private static void predict(Map<User, Map<Film, Double>> data) {
-        HashMap<Film, Double> uPred = new HashMap<Film, Double>();
-        HashMap<Film, Integer> uFreq = new HashMap<Film, Integer>();
+        HashMap<Film, Double> uPred = new HashMap<>();
+        HashMap<Film, Integer> uFreq = new HashMap<>();
         for (Film j : diff.keySet()) {
             uFreq.put(j, 0);
             uPred.put(j, 0.0);
@@ -117,21 +109,5 @@ public class SlopeOne {
             }
             outputData.put(e.getKey(), clean);
         }
-        printData(outputData);
     }
-
-    private static void printData(Map<User, Map<Film, Double>> data) {
-        for (User user : data.keySet()) {
-            System.out.println(user.getName() + ":");
-            print(data.get(user));
-        }
-    }
-
-    private static void print(Map<Film, Double> hashMap) {
-        NumberFormat formatter = new DecimalFormat("#0.000");
-        for (Film j : hashMap.keySet()) {
-            System.out.println(" " + j.getName() + " --> " + formatter.format(hashMap.get(j).doubleValue()));
-        }
-    }
-
 }

@@ -6,11 +6,12 @@ import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.user.collaborative_filtering.SlopeOne;
+import ru.yandex.practicum.filmorate.util.collaborative_filtering.SlopeOne;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -184,10 +185,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Film> getRecommendations(Long id) {
+        List<User> users = userStorage.getAll();
+        List<Film> films = filmStorage.getAll();
         Map<User, Map<Film, Double>> data =new HashMap<>();
-        //List<Film> films = SlopeOne.slopeOne(data);
+        for (User user : users) {
+            Map<Film, Double> likedFilms = films.stream()
+                    .filter(x -> x.getUsersWhoLike().contains(user.getId()))
+                    .collect(Collectors.toMap(x -> x, y -> 1.0));
+            data.put(user, likedFilms);
+        }
+        SlopeOne.forUser = getById(id);
         SlopeOne.slopeOne(data);
-        return filmStorage.getAll();
+        //Ограничиваю рекомендации пятью фильмами
+        return SlopeOne.slopeOne(data).stream().limit(5).collect(Collectors.toList());
     }
 
     private static void setNameIfItEmpty(User user) {
