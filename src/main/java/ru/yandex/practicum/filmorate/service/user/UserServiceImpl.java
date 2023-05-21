@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.user.collaborative_filtering.SlopeOne;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
@@ -13,6 +16,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
 
     @Override
     public User add(User user) {
@@ -176,6 +180,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return user.get();
+    }
+
+    @Override
+    public List<Film> getRecommendations(Long id) {
+        Map<User, Map<Film, Double>> data =new HashMap<>();
+        //List<Film> films = SlopeOne.slopeOne(data);
+        SlopeOne.slopeOne(data);
+        return filmStorage.getAll();
     }
 
     private static void setNameIfItEmpty(User user) {
