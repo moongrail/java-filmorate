@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-import ru.yandex.practicum.filmorate.util.collaborative_filtering.SlopeOne;
+import ru.yandex.practicum.filmorate.util.recomendation.SlopeOneUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -194,10 +194,10 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toMap(x -> x, y -> 1.0));
             data.put(user, likedFilms);
         }
-        SlopeOne.forUser = getById(id);
-        SlopeOne.slopeOne(data);
+        SlopeOneUtil.forUser = getById(id);
+        SlopeOneUtil.slopeOne(data);
         //Ограничиваю рекомендации пятью фильмами
-        return SlopeOne.slopeOne(data).stream()
+        return SlopeOneUtil.slopeOne(data).stream()
                 .filter(x -> !x.getUsersWhoLike().contains(id))
                 .limit(5).collect(Collectors.toList());
     }

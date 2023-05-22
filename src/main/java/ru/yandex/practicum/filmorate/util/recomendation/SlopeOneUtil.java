@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.util.collaborative_filtering;
+package ru.yandex.practicum.filmorate.util.recomendation;
 
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @UtilityClass
-public class SlopeOne {
+public class SlopeOneUtil {
 
     private static Map<Film, Map<Film, Double>> diff = new HashMap<>();
     private static Map<Film, Map<Film, Integer>> freq = new HashMap<>();
