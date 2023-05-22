@@ -15,6 +15,7 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -122,6 +123,11 @@ public class FilmController {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(film));
+    }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
+        return filmService.getCommonFilms(userId, friendId);
     }
 
     @DeleteMapping("/{id}")
