@@ -85,6 +85,7 @@ public class SlopeOneUtil {
                         uPred.put(k, uPred.get(k) + finalValue);
                         uFreq.put(k, uFreq.get(k) + freq.get(k).get(j));
                     } catch (NullPointerException e1) {
+                        System.out.println("Переход");
                     }
                 }
             }
