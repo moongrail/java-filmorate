@@ -14,5 +14,6 @@ public @interface ValidBirthDayUser {
     String message() default "дата рождения не может быть в будущем.";
 
     Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default  {};
+
+    Class<? extends Payload>[] payload() default {};
 }
