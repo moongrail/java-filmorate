@@ -175,8 +175,12 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getCommonFilms(Long userId, Long friendId) {
         List<Film> userFilms = filmStorage.getFilmslikedByUser(userId);
         List<Film> friendFilms = filmStorage.getFilmslikedByUser(friendId);
-        List<Long> friendFilmsIds = friendFilms.stream().map(Film::getId).collect(Collectors.toList());
-        return userFilms.stream().filter(x -> friendFilmsIds.contains(x.getId())).collect(Collectors.toList());
+        List<Long> friendFilmsIds = friendFilms.stream()
+                .map(Film::getId)
+                .collect(Collectors.toList());
+        return userFilms.stream()
+                .filter(x -> friendFilmsIds.contains(x.getId()))
+                .collect(Collectors.toList());
     }
 
     private List<Long> getGenreIdsForCurrentFilm(Film film) {
