@@ -30,6 +30,15 @@ public class FilmDbStorage implements FilmStorage {
             "LEFT JOIN FILM_MPA M ON F.FILM_ID = M.FILM_ID " +
             "LEFT JOIN MPA MP ON M.MPA_ID = MP.MPA_ID " +
             "ORDER BY F.FILM_ID ";
+
+    private static final String FIND_FILMS_LIKED_BY_USER = "SELECT f.film_id AS ID, f.name, f.RELEASE_DATE, F.DESCRIPTION, " +
+            "f.duration, f.rate, m.mpa_id, l.user_id, " +
+            "mp.mpa_name FROM FILM F " +
+            "LEFT JOIN FILM_MPA M ON F.FILM_ID = M.FILM_ID " +
+            "LEFT JOIN MPA MP ON M.MPA_ID = MP.MPA_ID " +
+            "LEFT JOIN LIKES L ON F.FILM_ID = L.FILM_ID  " +
+            "WHERE user_id = ?" +
+            "ORDER BY F.FILM_ID ";
     private static final String FIND_GENRES =
             "SELECT f.genre_id AS id, g.genre_name AS name " +
                     "FROM film_genre f " +
@@ -249,6 +258,12 @@ public class FilmDbStorage implements FilmStorage {
 
         jdbcTemplate.update(DELETE_LIKE, filmId, userId);
     }
+
+    @Override
+    public List<Film> getFilmslikedByUser(Long userId) {
+        return new ArrayList<>(getListOfFilms(FIND_FILMS_LIKED_BY_USER, userId).values());
+    }
+
 
     public boolean containsFilm(long id) {
         return jdbcTemplate.queryForRowSet(FIND_FILM_BY_ID, id).next();
