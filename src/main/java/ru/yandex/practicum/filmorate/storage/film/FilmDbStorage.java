@@ -36,6 +36,11 @@ public class FilmDbStorage implements FilmStorage {
                     "LEFT JOIN  genre g ON f.genre_id = g.genre_id " +
                     "WHERE f.film_id = ? " +
                     "ORDER BY g.genre_id";
+
+    private static final String FIND_LIKES =
+            "SELECT l.user_id " +
+                    "FROM likes l " +
+                    "WHERE l.film_id = ? ";
     private static final String FIND_TOP_FILMS = "SELECT F.FILM_ID AS ID, F.NAME, F.RELEASE_DATE, F.DESCRIPTION," +
             " F.DURATION, F.RATE, COUNT(L.USER_ID) AS liked, M.MPA_ID, MP.MPA_NAME " +
             "FROM FILM F " +
@@ -199,6 +204,14 @@ public class FilmDbStorage implements FilmStorage {
                 genres.add(genre);
             }
             film.setGenres(genres);
+
+            SqlRowSet rsLikes = jdbcTemplate.queryForRowSet(FIND_LIKES, filmId);
+            Set<Long> likes = new HashSet<>();
+            while (rsLikes.next()) {
+                likes.add(rsLikes.getLong("user_id"));
+            }
+            film.setUsersWhoLike(likes);
+
             films.put(filmId, film);
         }
 

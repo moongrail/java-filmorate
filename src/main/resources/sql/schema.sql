@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS film
 
 CREATE TABLE IF NOT EXISTS friend
 (
-    user_id   BIGINT REFERENCES users (user_id) ON DELETE RESTRICT,
+    user_id   BIGINT REFERENCES users (user_id) ON DELETE CASCADE,
     friend_id BIGINT REFERENCES users (user_id) ON DELETE CASCADE,
     confirmed BOOLEAN
 );
@@ -53,12 +53,12 @@ CREATE TABLE IF NOT EXISTS genre
 CREATE TABLE IF NOT EXISTS film_genre
 (
     genre_id BIGINT REFERENCES genre (genre_id),
-    film_id  BIGINT REFERENCES film (film_id)
+    film_id  BIGINT REFERENCES film (film_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS likes
 (
-    film_id BIGINT REFERENCES film (film_id) ON DELETE RESTRICT,
+    film_id BIGINT REFERENCES film (film_id) ON DELETE CASCADE,
     user_id BIGINT REFERENCES users (user_id) ON DELETE CASCADE
 );
 

@@ -83,6 +83,7 @@ public class FilmController {
 
         filmService.addLike(id, userId);
         feedService.saveAddLike(userId, id);
+
         log.info("Лайк поставлен фильм с айди - {}", id);
 
         return ResponseEntity
@@ -92,11 +93,13 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
+
     public ResponseEntity<String> removeLikeFilm(@PathVariable Long id,
                                               @PathVariable Long userId) {
 
         filmService.removeLike(id, userId);
         feedService.saveRemoveLike(userId, id);
+
         log.info("Лайк убран. фильм с айди - {}", id);
 
         return ResponseEntity
@@ -126,5 +129,11 @@ public class FilmController {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(film));
+    }
+
+    @DeleteMapping("/{id}")
+    public void removeFilm(@PathVariable long id) {
+        filmService.deleteById(id);
+        log.info("Удален фильм с айди - {}", id);
     }
 }

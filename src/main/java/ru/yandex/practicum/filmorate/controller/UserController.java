@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Feed;
+import ru.yandex.practicum.filmorate.model.Film
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.feed.FeedService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
@@ -156,11 +157,23 @@ public class UserController {
                 .body(gson.toJson(mutualFriends));
     }
 
+
     @GetMapping("/{id}/feed")
     public List<Feed> getUserFeeds(@PathVariable Long id) {
         List<Feed> feeds = feedService.getFeeds(id);
         log.info("Лента событий пользователя с айди {}", id);
 
         return feeds;
+    }
+  
+    @GetMapping("/{id}/recommendations")
+    public List<Film> getRecommendations(@PathVariable Long id) {
+        return userService.getRecommendations(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);
+        log.info("Удален пользователь - {}", id);
     }
 }
