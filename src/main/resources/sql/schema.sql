@@ -9,6 +9,7 @@ drop table if exists film_mpa CASCADE;
 drop table if exists reviews CASCADE;
 drop table if exists review_dislikes CASCADE;
 drop table if exists review_likes CASCADE;
+drop table if exists feeds CASCADE;
 
 
 CREATE TABLE IF NOT EXISTS users
@@ -87,4 +88,14 @@ CREATE TABLE IF NOT EXISTS review_dislikes
 (
     review_id BIGINT REFERENCES reviews (review_id) ON DELETE CASCADE,
     user_id   BIGINT REFERENCES users (user_id) ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS feeds
+(
+    timestamp BIGINT       NOT NULL,
+    user_id BIGINT         NOT NULL,
+    event_type VARCHAR(6)  NOT NULL,
+    operation VARCHAR(6)   NOT NULL,
+    event_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    entity_id BIGINT       NOT NULL
 );
