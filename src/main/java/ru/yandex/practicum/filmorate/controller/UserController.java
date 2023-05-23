@@ -156,4 +156,10 @@ public class UserController {
     public List<Film> getRecommendations(@PathVariable Long id) {
         return userService.getRecommendations(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);
+        log.info("Удален пользователь - {}", id);
+    }
 }

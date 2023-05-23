@@ -123,4 +123,10 @@ public class FilmController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(film));
     }
+
+    @DeleteMapping("/{id}")
+    public void removeFilm(@PathVariable long id) {
+        filmService.deleteById(id);
+        log.info("Удален фильм с айди - {}", id);
+    }
 }
