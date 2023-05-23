@@ -53,15 +53,15 @@ public class FeedDbStorage implements FeedStorage {
     }
 
     @Override
-    public void saveUpdateReview(Long userId, Long filmId) {
+    public void saveUpdateReview(Long userId, Long reviewId) {
         jdbcTemplate.update(SAVE_ACTION, Instant.now().toEpochMilli(), userId, EventType.REVIEW.toString(), Operation
-                .UPDATE.toString(), filmId);
+                .UPDATE.toString(), reviewId);
     }
 
     @Override
-    public void saveAddReview(Long userId, Long filmId) {
+    public void saveAddReview(Long userId, Long reviewId) {
         jdbcTemplate.update(SAVE_ACTION, Instant.now().toEpochMilli(), userId, EventType.REVIEW.toString(),
-                Operation.ADD.toString(), filmId);
+                Operation.ADD.toString(), reviewId);
     }
 
     @Override

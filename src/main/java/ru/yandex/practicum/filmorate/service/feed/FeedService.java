@@ -15,11 +15,11 @@ public interface FeedService {
 
     void saveRemoveLike(Long userId, Long filmId);
 
-    void saveRemoveReview(Long userId, Long filmId);
+    void saveRemoveReview(Long userId, Long reviewId);
 
-    void saveUpdateReview(Long userId, Long filmId);
+    void saveUpdateReview(Long userId, Long reviewId);
 
-    void saveAddReview(Long userId, Long filmId);
+    void saveAddReview(Long userId, Long reviewId);
 
     void saveAddLikeReview(Long userId, Long reviewId);
 

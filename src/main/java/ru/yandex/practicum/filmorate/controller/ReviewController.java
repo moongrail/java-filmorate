@@ -40,7 +40,7 @@ public class ReviewController {
         }
 
         Review addedReview = reviewService.addReview(review);
-        feedService.saveAddReview(review.getUserId(), review.getFilmId());
+        feedService.saveAddReview(review.getUserId(), review.getReviewId());
         log.info("Добавлен отзыв с id {}", addedReview.getReviewId());
 
         return ResponseEntity
@@ -61,7 +61,7 @@ public class ReviewController {
         }
 
         Review updatedReview = reviewService.updateReview(review);
-        feedService.saveUpdateReview(review.getUserId(), review.getFilmId());
+        feedService.saveUpdateReview(review.getUserId(), review.getReviewId());
         log.info("Обновлен отзыв с id {}", updatedReview.getReviewId());
 
         return ResponseEntity
@@ -75,7 +75,7 @@ public class ReviewController {
         Review review = reviewService.getReviewById(id);
 
         reviewService.deleteReviewById(id);
-        feedService.saveRemoveReview(review.getUserId(), review.getFilmId());
+        feedService.saveRemoveReview(review.getUserId(), review.getReviewId());
         log.info("Удален отзыв с id {}", id);
 
         return ResponseEntity.ok("Отзыв удален");
@@ -115,7 +115,7 @@ public class ReviewController {
         Review review = reviewService.getReviewById(reviewId);
 
         reviewService.addLike(reviewId, userId);
-        feedService.saveAddLikeReview(userId, review.getFilmId());
+        //feedService.saveAddLikeReview(userId, review.getFilmId());
         log.info("Пользователь с id {} поставил лайк отзыву с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Лайк добавлен");
