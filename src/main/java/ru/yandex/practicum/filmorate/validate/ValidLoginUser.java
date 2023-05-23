@@ -14,5 +14,6 @@ public @interface ValidLoginUser {
     String message() default "В логине не должно быть пробелов.";
 
     Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default  {};
+
+    Class<? extends Payload>[] payload() default {};
 }
