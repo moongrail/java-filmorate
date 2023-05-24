@@ -157,7 +157,6 @@ public class UserController {
                 .body(gson.toJson(mutualFriends));
     }
 
-
     @GetMapping("/{id}/feed")
     public List<Feed> getUserFeeds(@PathVariable Long id) {
         List<Feed> feeds = feedService.getFeeds(id);
@@ -165,7 +164,7 @@ public class UserController {
 
         return feeds;
     }
-  
+
     @GetMapping("/{id}/recommendations")
     public List<Film> getRecommendations(@PathVariable Long id) {
         return userService.getRecommendations(id);
