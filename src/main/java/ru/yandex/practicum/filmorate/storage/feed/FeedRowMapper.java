@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Operation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 public class FeedRowMapper implements RowMapper<Feed> {
 
