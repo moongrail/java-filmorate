@@ -95,6 +95,7 @@ public class FilmServiceImpl implements FilmService {
         }
 
         filmStorage.removeLike(id, userId);
+
         Film film = filmStorageById.get();
 
         if (film.getRate() > 1) {
