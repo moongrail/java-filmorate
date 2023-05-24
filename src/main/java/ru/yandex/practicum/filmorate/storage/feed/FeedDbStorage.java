@@ -12,9 +12,9 @@ import java.util.List;
 @Component
 public class FeedDbStorage implements FeedStorage {
 
-    private final static String SAVE_ACTION = "INSERT INTO feeds (timestamp, user_id, event_type, operation, entity_id)" +
+    private static final String SAVE_ACTION = "INSERT INTO feeds (timestamp, user_id, event_type, operation, entity_id)" +
             "VALUES (?, ?, ?, ?, ?)";
-    private final static String GET_FEEDS = "SELECT * FROM feeds WHERE user_id = ?";
+    private static final String GET_FEEDS = "SELECT * FROM feeds WHERE user_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     public FeedDbStorage(JdbcTemplate jdbcTemplate) {
