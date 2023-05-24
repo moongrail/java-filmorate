@@ -10,10 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
-import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.feed.FeedService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
@@ -26,7 +24,6 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private final UserService userService;
-    private final FeedService feedService;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
@@ -108,7 +105,6 @@ public class UserController {
 
 
         userService.addFriend(id, friendId);
-        feedService.saveAddFriend(id, friendId);
         log.info("Добавлен друг {} пользователю {}", friendId, id);
 
 
@@ -123,7 +119,6 @@ public class UserController {
                                                     @PathVariable Long friendId) {
 
         userService.removeFriend(id, friendId);
-        feedService.saveRemoveFriend(id, friendId);
         log.info("Удалён друг {} пользователю {}", friendId, id);
 
 
@@ -155,14 +150,6 @@ public class UserController {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(mutualFriends));
-    }
-
-    @GetMapping("/{id}/feed")
-    public List<Feed> getUserFeeds(@PathVariable Long id) {
-        List<Feed> feeds = feedService.getFeeds(id);
-        log.info("Лента событий пользователя с айди {}", id);
-
-        return feeds;
     }
 
     @GetMapping("/{id}/recommendations")
