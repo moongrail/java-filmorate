@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
             }
 
             userStorage.removeFriend(idFrom, idTo);
+
         } else {
             throw new UserNotFoundException("Пользователя с таким айди нет в списке друзей.");
         }

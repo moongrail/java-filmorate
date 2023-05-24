@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Review;
-import ru.yandex.practicum.filmorate.service.feed.FeedService;
 import ru.yandex.practicum.filmorate.service.review.ReviewService;
 
 import javax.validation.Valid;
@@ -22,7 +21,6 @@ import java.util.List;
 @Slf4j
 public class ReviewController {
     private final ReviewService reviewService;
-    private final FeedService feedService;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
@@ -40,7 +38,6 @@ public class ReviewController {
         }
 
         Review addedReview = reviewService.addReview(review);
-        feedService.saveAddReview(review.getUserId(), review.getReviewId());
         log.info("Добавлен отзыв с id {}", addedReview.getReviewId());
 
         return ResponseEntity
@@ -61,7 +58,6 @@ public class ReviewController {
         }
 
         Review updatedReview = reviewService.updateReview(review);
-        feedService.saveUpdateReview(updatedReview.getUserId(), updatedReview.getReviewId());
         log.info("Обновлен отзыв с id {}", updatedReview.getReviewId());
 
         return ResponseEntity
@@ -72,10 +68,7 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReview(@PathVariable Long id) {
-        Review review = reviewService.getReviewById(id);
-
         reviewService.deleteReviewById(id);
-        feedService.saveRemoveReview(review.getUserId(), review.getReviewId());
         log.info("Удален отзыв с id {}", id);
 
         return ResponseEntity.ok("Отзыв удален");
@@ -112,10 +105,7 @@ public class ReviewController {
 
     @PutMapping("/{reviewId}/like/{userId}")
     public ResponseEntity<String> addLike(@PathVariable Long reviewId, @PathVariable Long userId) {
-        Review review = reviewService.getReviewById(reviewId);
-
         reviewService.addLike(reviewId, userId);
-        //feedService.saveAddLikeReview(userId, review.getFilmId());
         log.info("Пользователь с id {} поставил лайк отзыву с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Лайк добавлен");
@@ -124,7 +114,6 @@ public class ReviewController {
     @PutMapping("/{reviewId}/dislike/{userId}")
     public ResponseEntity<String> addDislike(@PathVariable Long reviewId, @PathVariable Long userId) {
         reviewService.addDislike(reviewId, userId);
-        //feedService.saveAddDislikeReview(userId, reviewId);
         log.info("Пользователь с id {} поставил дизлайк отзыву с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Дизлайк добавлен");
@@ -133,7 +122,6 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}/like/{userId}")
     public ResponseEntity<String> removeLike(@PathVariable Long reviewId, @PathVariable Long userId) {
         reviewService.removeLike(reviewId, userId);
-        feedService.saveRemoveLikeReview(userId, reviewId);
         log.info("Пользователь с id {} удалил лайк отзыва с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Лайк удален");
@@ -142,7 +130,6 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}/dislike/{userId}")
     public ResponseEntity<String> removeDislike(@PathVariable Long reviewId, @PathVariable Long userId) {
         reviewService.removeDislike(reviewId, userId);
-        //feedService.saveRemoveDislikeReview(userId, reviewId);
         log.info("Пользователь с id {} удалил дизлайк отзыва с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Дизлайк удален");
