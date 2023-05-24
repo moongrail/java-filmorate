@@ -112,10 +112,7 @@ public class ReviewController {
 
     @PutMapping("/{reviewId}/like/{userId}")
     public ResponseEntity<String> addLike(@PathVariable Long reviewId, @PathVariable Long userId) {
-        Review review = reviewService.getReviewById(reviewId);
-
         reviewService.addLike(reviewId, userId);
-        //feedService.saveAddLikeReview(userId, review.getFilmId());
         log.info("Пользователь с id {} поставил лайк отзыву с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Лайк добавлен");
@@ -124,7 +121,6 @@ public class ReviewController {
     @PutMapping("/{reviewId}/dislike/{userId}")
     public ResponseEntity<String> addDislike(@PathVariable Long reviewId, @PathVariable Long userId) {
         reviewService.addDislike(reviewId, userId);
-        //feedService.saveAddDislikeReview(userId, reviewId);
         log.info("Пользователь с id {} поставил дизлайк отзыву с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Дизлайк добавлен");
@@ -142,7 +138,6 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}/dislike/{userId}")
     public ResponseEntity<String> removeDislike(@PathVariable Long reviewId, @PathVariable Long userId) {
         reviewService.removeDislike(reviewId, userId);
-        //feedService.saveRemoveDislikeReview(userId, reviewId);
         log.info("Пользователь с id {} удалил дизлайк отзыва с id {}", userId, reviewId);
 
         return ResponseEntity.ok("Дизлайк удален");
