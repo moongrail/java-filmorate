@@ -61,7 +61,7 @@ public class ReviewController {
         }
 
         Review updatedReview = reviewService.updateReview(review);
-        feedService.saveUpdateReview(review.getUserId(), review.getReviewId());
+        feedService.saveUpdateReview(updatedReview.getUserId(), updatedReview.getReviewId());
         log.info("Обновлен отзыв с id {}", updatedReview.getReviewId());
 
         return ResponseEntity
