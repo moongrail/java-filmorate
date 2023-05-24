@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.feed.FeedService;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ import java.util.List;
 @Slf4j
 public class FilmController {
     private final FilmService filmService;
+    private final FeedService feedService;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
@@ -81,6 +83,8 @@ public class FilmController {
                                               @PathVariable Long userId) {
 
         filmService.addLike(id, userId);
+        feedService.saveAddLike(userId, id);
+
         log.info("Лайк поставлен фильм с айди - {}", id);
 
         return ResponseEntity
@@ -90,10 +94,13 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public ResponseEntity<String> removeLikeFilm(@PathVariable String id,
-                                                 @PathVariable String userId) {
 
-        filmService.removeLike(Long.valueOf(id), Long.valueOf(userId));
+    public ResponseEntity<String> removeLikeFilm(@PathVariable Long id,
+                                              @PathVariable Long userId) {
+
+        filmService.removeLike(id, userId);
+        feedService.saveRemoveLike(userId, id);
+
         log.info("Лайк убран. фильм с айди - {}", id);
 
         return ResponseEntity
