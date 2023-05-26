@@ -1,4 +1,0 @@
-2023-05-26 20:18:08 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "DELETE [*]* FROM directors"; ожидалось "identifier"
-Syntax error in SQL statement "DELETE [*]* FROM directors"; expected "identifier"; SQL statement:
-DELETE * FROM directors [42001-214]
