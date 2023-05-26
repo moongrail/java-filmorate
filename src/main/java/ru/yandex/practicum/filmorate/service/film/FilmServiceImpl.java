@@ -188,6 +188,7 @@ public class FilmServiceImpl implements FilmService {
         Set<Genre> genres = film.getGenres();
         return genres.stream().map(Genre::getId).collect(Collectors.toList());
     }
+
     @Override
     public List<Film> getFilmsByDirectorSortedByLikes(long directorId) {
         return filmStorage.getFilmsByDirectorSortedByLikes(directorId);
@@ -197,5 +198,4 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getFilmsByDirectorSortedByYear(long directorId) {
         return filmStorage.getFilmsByDirectorSortedByYear(directorId);
     }
-
 }
