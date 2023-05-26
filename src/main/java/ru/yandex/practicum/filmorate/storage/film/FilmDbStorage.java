@@ -14,6 +14,9 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -287,5 +290,41 @@ public class FilmDbStorage implements FilmStorage {
 
     private void removeFilmGenres(Set<Genre> genres, long filmId) {
         genres.forEach(genre -> jdbcTemplate.update(DELETE_FILM_GENRE, filmId, genre.getId()));
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectorSortedByLikes(long directorId) {
+        String sql = "SELECT director_name   FROM directors AS d WHERE director_id = ? " +
+                "JOIN film_director AS fd ON d.director_id = fd.director_id" +
+                " JOIN likes AS l ON fd.film_id = l.film_id WHERE COUNT(user_id) AS count_likes" +
+                "ORDER BY count_likes";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rowMapperFilm(rs), directorId);
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectorSortedByYear(long directorId) {
+        String sql = "SELECT director_name FROM diretors AS d WHERE director_id = ? " +
+                "JOIN film_director AS fd ON d.director_id = fd.diretor_id " +
+                "WHERE fd.film_id IN (SELECT name, release_date FROM film" +
+                "ORDER BY release_date DESC) AS film_sort";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rowMapperFilm(rs), directorId);
+    }
+
+    private Film rowMapperFilm(ResultSet rs) throws SQLException {
+        long id = rs.getLong("film_id");
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
+        int duration = rs.getInt("duration");
+        int rate = rs.getInt("rate");
+
+        return Film.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .releaseDate(releaseDate)
+                .duration(duration)
+                .rate(rate)
+                .build();
     }
 }

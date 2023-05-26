@@ -51,4 +51,10 @@ public class ErrorHandler {
     public ErrorResponse handlerValidationException(GenreNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler(DirectorNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleDirectorNotFoundException(DirectorNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
 }

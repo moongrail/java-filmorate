@@ -2,14 +2,30 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@EqualsAndHashCode
 @ToString
+@EqualsAndHashCode(exclude = "name")
+@AllArgsConstructor
+@Builder
 public class Director {
-    private Long id;
+    private long id;
+    @NonNull
     private String name;
+    private final Set<Film> films = new HashSet<>();
+
+    public List<Film> getFilms() {
+        return films.stream()
+                .sorted(Comparator.comparing(Film::getId))
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> directors() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("director_name", name);
+        return values;
+    }
 }
