@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -77,6 +78,7 @@ public class FilmDbStorage implements FilmStorage {
     private static final String INSERT_FILM_GENRE = "INSERT INTO FILM_GENRE (film_id, genre_id) VALUES (?,?)";
     private static final String UPDATE_FILM = "UPDATE film SET name = ?, description = ?, release_date = ?," +
             " duration = ?, rate = ? WHERE film_id = ?";
+    //private  static final String ADD_DIRECTOR = "INSERT INTO film_director (director_id, film_id) VALUES (?, ?)";
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -91,6 +93,12 @@ public class FilmDbStorage implements FilmStorage {
             if (!genres.isEmpty()) {
                 updateFilmGenres(removeDoubles(genres), idFilm);
             }
+
+            List<Director> directors = film.getDirectors();
+            if (!directors.isEmpty()) {
+                deleteAllDirectorsFromFilm(idFilm);
+            }
+            film.getDirector().forEach(director -> addDirectorToFilm(idFilm, director.getId()));
 
             return Optional.of(film);
         } catch (Exception e) {
@@ -151,6 +159,13 @@ public class FilmDbStorage implements FilmStorage {
         if (!genresAfter.isEmpty()) {
             updateFilmGenres(genresAfter, filmId);
         }
+
+        List<Director> directors = film.getDirectors();
+        if (!directors.isEmpty()) {
+            deleteAllDirectorsFromFilm(filmId);
+        }
+        film.getDirectors().forEach(director -> addDirectorToFilm(filmId, director.getId()));
+
 
         return Optional.of(film);
     }
@@ -267,6 +282,17 @@ public class FilmDbStorage implements FilmStorage {
         return new ArrayList<>(getListOfFilms(FIND_FILMS_LIKED_BY_USER, userId).values());
     }
 
+    //@Override
+    private boolean addDirectorToFilm(long directorId, Long filmId) {
+        String sql = "INSERT INTO film_director (director_id, film_id) VALUES (?, ?)";
+        return jdbcTemplate.update(sql, filmId, directorId) > 0;
+    }
+
+    //@Override
+    private boolean deleteAllDirectorsFromFilm(long filmId) {
+        String sql = "DELETE FROM film_director WHERE film_id = ?";
+        return jdbcTemplate.update(sql, filmId) > 0;
+    }
 
     public boolean containsFilm(long id) {
         return jdbcTemplate.queryForRowSet(FIND_FILM_BY_ID, id).next();

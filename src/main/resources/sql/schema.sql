@@ -10,6 +10,8 @@ drop table if exists reviews CASCADE;
 drop table if exists review_dislikes CASCADE;
 drop table if exists review_likes CASCADE;
 drop table if exists feeds CASCADE;
+drop table if exists directors CASCADE;
+drop table if exists film_director CASCADE;
 
 
 CREATE TABLE IF NOT EXISTS users

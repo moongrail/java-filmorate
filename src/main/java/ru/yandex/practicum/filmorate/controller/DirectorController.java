@@ -1,23 +1,15 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.director.DirectorService;
-import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/directors")
@@ -26,11 +18,7 @@ import java.util.List;
 public class DirectorController {
 
     private final DirectorService directorService;
-    private final FilmService filmService;
-    private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-            .create();
+    private final Gson gson = new Gson();
 
     @GetMapping
     public ResponseEntity<String> getDirectors() {
@@ -51,14 +39,9 @@ public class DirectorController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createDirector(@RequestBody @Valid Director director, BindingResult bindingResult) {
+    public ResponseEntity<String> createDirector(@RequestBody @Valid Director director) {
         //проверка на валидацию
-        if (bindingResult.hasErrors()) {
-            log.error("Ошибка при создании режиссёра - {} ", director);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(gson.toJson(director));
-        }
+
         directorService.addDirector(director);
         log.info("Создан режиссёр - {} ", director);
         return ResponseEntity
@@ -68,20 +51,9 @@ public class DirectorController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateDirector(@PathVariable @Valid Director director, BindingResult bindingResult) {
-        //проверка на валидацию
-        if (bindingResult.hasErrors()) {
-            log.error("Ошибка при обновлении режиссёра - {} ", director);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(gson.toJson(director));
-        }
-        directorService.updateDirector(director);
+    public Director updateDirector(@RequestBody @Valid Director director) {
         log.info("Обновлён режиссёр - {} ", director);
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(director));
+        return directorService.updateDirector(director);
     }
 
     @DeleteMapping("/{id}")
@@ -92,17 +64,5 @@ public class DirectorController {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("Режиссёр удалён");
-    }
-
-    @GetMapping("/{directorId}")
-    public List<Film> getFilmsByDirector(
-            @PathVariable Long directorId,
-            @RequestParam(name = "sortBy", defaultValue = "year") String sortBy
-    ) {
-        if (sortBy.equals("likes")) {
-            return filmService.getFilmsByDirectorSortedByLikes(directorId);
-        } else {
-            return filmService.getFilmsByDirectorSortedByYear(directorId);
-        }
     }
 }

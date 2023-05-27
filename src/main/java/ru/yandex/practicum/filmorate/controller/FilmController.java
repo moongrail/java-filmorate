@@ -96,7 +96,7 @@ public class FilmController {
     @DeleteMapping("/{id}/like/{userId}")
 
     public ResponseEntity<String> removeLikeFilm(@PathVariable Long id,
-                                              @PathVariable Long userId) {
+                                                 @PathVariable Long userId) {
 
         filmService.removeLike(id, userId);
         feedService.saveRemoveLike(userId, id);
@@ -141,5 +141,17 @@ public class FilmController {
     public void removeFilm(@PathVariable long id) {
         filmService.deleteById(id);
         log.info("Удален фильм с айди - {}", id);
+    }
+
+    @GetMapping("/director/{directorId}?sortBy=[year,likes]")
+    public List<Film> getFilmsByDirector(
+            @PathVariable Long directorId,
+            @RequestParam(name = "sortBy", defaultValue = "year") String sortBy
+    ) {
+        if (sortBy.equals("likes")) {
+            return filmService.getFilmsByDirectorSortedByLikes(directorId);
+        } else {
+            return filmService.getFilmsByDirectorSortedByYear(directorId);
+        }
     }
 }

@@ -68,7 +68,7 @@ public class DirectorStorageDb implements DirectorStorage {
 
     @Override
     public Director deleteDirector(long id) {
-        String sql = "DELETE * FROM directors";
+        String sql = "DELETE FROM directors WHERE id = ?";
         if (jdbcTemplate.update(sql, id) > 0) {
             deleteAllFilmsByDirector(id);
             log.info("Режиссёр {}  удалён", id);
