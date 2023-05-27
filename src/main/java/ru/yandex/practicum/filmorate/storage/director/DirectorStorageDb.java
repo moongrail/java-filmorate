@@ -57,7 +57,7 @@ public class DirectorStorageDb implements DirectorStorage {
     @Override
     public Director updateDirector(Director director) {
         String sql = "UPDATE directors SET director_name = ? WHERE Director_id = ?";
-        if (jdbcTemplate.update(sql, director.getName()) > 0) {
+        if (jdbcTemplate.update(sql, director.getName(), director.getId()) > 0) {
             deleteAllFilmsByDirector(director.getId());
             director.getFilms().forEach(film -> addFilmsDirector(director.getId(), film.getId()));
             return director;
@@ -67,20 +67,20 @@ public class DirectorStorageDb implements DirectorStorage {
     }
 
     @Override
-    public Director deleteDirector(long id) {
-        String sql = "DELETE FROM directors WHERE id = ?";
-        if (jdbcTemplate.update(sql, id) > 0) {
-            deleteAllFilmsByDirector(id);
-            log.info("Режиссёр {}  удалён", id);
-            return getDirectorById(id);
+    public void deleteDirector(long id) {
+        String sql = "DELETE FROM directors WHERE director_id = ?";
+        if (getDirectorById(id) == null) {
+            log.warn("Запрашиваемый режиссёр {} отсутствует и не может быть удалён", id);
+            throw new DirectorNotFoundException("Режиссёр не найден" + id);
         }
-        log.warn("Запрашиваемый режиссёр {} отсутствует и не может быть удалён", id);
-        throw new DirectorNotFoundException("Режиссёр не найден" + id);
+        jdbcTemplate.update(sql, id);
+        deleteAllFilmsByDirector(id);
+        log.info("Режиссёр {}  удалён", id);
     }
 
     @Override
     public boolean addFilmsDirector(long directorId, long fimId) {
-        String sql = "INSERT INTO film_director (director_id, film_id) VALUES (?,?)";
+        String sql = "INSERT INTO film_director (director_id, film_id) VALUES (?, ?)";
         return jdbcTemplate.update(sql, directorId, fimId) > 0;
     }
 

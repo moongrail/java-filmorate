@@ -13,7 +13,7 @@ public interface DirectorStorage {
 
     Director updateDirector(Director director);
 
-    Director deleteDirector(long id);
+    void deleteDirector(long id);
 
     boolean addFilmsDirector(long directorId, long fimId);
 }

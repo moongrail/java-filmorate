@@ -34,8 +34,8 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public Director deleteDirector(long id) {
-        return directorStorage.deleteDirector(id);
+    public void deleteDirector(long id) {
+        directorStorage.deleteDirector(id);
     }
 }
 

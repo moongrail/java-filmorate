@@ -49,6 +49,12 @@ public class FilmDbStorage implements FilmStorage {
                     "LEFT JOIN  genre g ON f.genre_id = g.genre_id " +
                     "WHERE f.film_id = ? " +
                     "ORDER BY g.genre_id";
+    private static final String FIND_DIRECTORS =
+            "SELECT fd.director_id AS id, d.director_name AS name " +
+                    "FROM film_director fd " +
+                    "LEFT JOIN directors d ON fd.director_id = d.director_id " +
+                    "WHERE fd.director_id = ? " +
+                    "ORDER BY d.director_id";
 
     private static final String FIND_LIKES =
             "SELECT l.user_id " +
@@ -231,6 +237,21 @@ public class FilmDbStorage implements FilmStorage {
                 genres.add(genre);
             }
             film.setGenres(genres);
+
+            List<Director> directors = new ArrayList<>();
+            directors.stream()
+                    .sorted(Comparator.comparing(Director::getId))
+                    .collect(Collectors.toList());
+            SqlRowSet rsDirectors = jdbcTemplate.queryForRowSet(FIND_DIRECTORS, filmId);
+            while (rsDirectors.next()) {
+                Director director = Director.builder()
+                        .id(rsDirectors.getLong("director_id"))
+                        .name(rsDirectors.getString("director_name"))
+                        .build();
+                directors.add(director);
+
+            }
+            film.setDirectors(directors);
 
             SqlRowSet rsLikes = jdbcTemplate.queryForRowSet(FIND_LIKES, filmId);
             Set<Long> likes = new HashSet<>();

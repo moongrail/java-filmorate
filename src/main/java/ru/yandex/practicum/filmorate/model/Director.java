@@ -1,20 +1,21 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode(exclude = "name")
-@AllArgsConstructor
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Director {
     private long id;
-    @NonNull
+    //@NonNull
     @NotBlank
     private String name;
     private final Set<Film> films = new HashSet<>();
