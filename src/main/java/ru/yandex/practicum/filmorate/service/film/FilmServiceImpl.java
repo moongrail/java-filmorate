@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.director.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.*;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
+    private final DirectorStorage directorStorage;
 
     @Override
     public Film add(Film film) {
@@ -139,7 +141,8 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film getById(Long id) {
         Optional<Film> filmOptional = filmStorage.getById(id);
-
+//здесь хотела вытащить по directorStorage.getAllDirectors()
+        //и потом сортировать
         if (filmOptional.isEmpty()) {
             throw new FilmNotFoundException("Фильма с таким айди нет.");
         }
@@ -174,8 +177,8 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getCommonFilms(Long userId, Long friendId) {
-        List<Film> userFilms = filmStorage.getFilmslikedByUser(userId);
-        List<Film> friendFilms = filmStorage.getFilmslikedByUser(friendId);
+        List<Film> userFilms = filmStorage.getFilmsLikedByUser(userId);
+        List<Film> friendFilms = filmStorage.getFilmsLikedByUser(friendId);
         List<Long> friendFilmsIds = friendFilms.stream()
                 .map(Film::getId)
                 .collect(Collectors.toList());
@@ -187,5 +190,17 @@ public class FilmServiceImpl implements FilmService {
     private List<Long> getGenreIdsForCurrentFilm(Film film) {
         Set<Genre> genres = film.getGenres();
         return genres.stream().map(Genre::getId).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectorSortedByLikes(long directorId) {
+        directorStorage.getDirectorById(directorId);
+        return filmStorage.getFilmsByDirectorSortedByLikes(directorId);
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectorSortedByYear(long directorId) {
+        directorStorage.getDirectorById(directorId);
+        return filmStorage.getFilmsByDirectorSortedByYear(directorId);
     }
 }

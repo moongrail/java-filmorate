@@ -28,4 +28,8 @@ public interface FilmService {
     List<Film> getPopularFilmsByParameters(Short count, Long genreId, Integer year);
 
     List<Film> getCommonFilms(Long userId, Long friendId);
+
+    List<Film> getFilmsByDirectorSortedByLikes(long directorId);
+
+    List<Film> getFilmsByDirectorSortedByYear(long directorId);
 }
