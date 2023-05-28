@@ -177,8 +177,8 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getCommonFilms(Long userId, Long friendId) {
-        List<Film> userFilms = filmStorage.getFilmslikedByUser(userId);
-        List<Film> friendFilms = filmStorage.getFilmslikedByUser(friendId);
+        List<Film> userFilms = filmStorage.getFilmsLikedByUser(userId);
+        List<Film> friendFilms = filmStorage.getFilmsLikedByUser(friendId);
         List<Long> friendFilmsIds = friendFilms.stream()
                 .map(Film::getId)
                 .collect(Collectors.toList());
@@ -194,11 +194,13 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilmsByDirectorSortedByLikes(long directorId) {
+        directorStorage.getDirectorById(directorId);
         return filmStorage.getFilmsByDirectorSortedByLikes(directorId);
     }
 
     @Override
     public List<Film> getFilmsByDirectorSortedByYear(long directorId) {
+        directorStorage.getDirectorById(directorId);
         return filmStorage.getFilmsByDirectorSortedByYear(directorId);
     }
 }

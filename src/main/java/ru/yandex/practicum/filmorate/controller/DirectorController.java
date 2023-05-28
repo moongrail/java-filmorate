@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,10 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.service.director.DirectorService;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/directors")
@@ -20,7 +23,10 @@ import javax.validation.Valid;
 public class DirectorController {
 
     private final DirectorService directorService;
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+            .create();
 
     @GetMapping
     public ResponseEntity<String> getDirectors() {
