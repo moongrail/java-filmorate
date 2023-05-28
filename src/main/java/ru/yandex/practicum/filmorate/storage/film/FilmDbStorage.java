@@ -84,7 +84,8 @@ public class FilmDbStorage implements FilmStorage {
     private static final String INSERT_FILM_GENRE = "INSERT INTO FILM_GENRE (film_id, genre_id) VALUES (?,?)";
     private static final String UPDATE_FILM = "UPDATE film SET name = ?, description = ?, release_date = ?," +
             " duration = ?, rate = ? WHERE film_id = ?";
-    //private  static final String ADD_DIRECTOR = "INSERT INTO film_director (director_id, film_id) VALUES (?, ?)";
+    private static final String GET_DIRECTORS = "SELECT * FROM directors AS d" +
+            " JOIN film_director AS fd ON d.director_id = fd.director_id WHERE fd.film_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -190,9 +191,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Optional<Film> getById(Long id) {
         SqlRowSet userRs = jdbcTemplate.queryForRowSet(FIND_FILM_FULL, id);
+        //SqlRowSet directorRs = jdbcTemplate.queryForRowSet(GET_DIRECTORS, id);
 
         if (userRs.next()) {
             Film film = getListOfFilms(FIND_FILM_FULL, id).get(id);
+//getOneDream))
             return Optional.of(film);
         } else {
             return Optional.empty();
@@ -341,7 +344,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getFilmsByDirectorSortedByLikes(long directorId) {
-        String sql = "SELECT director_name   FROM directors AS d WHERE director_id = ? " +
+        String sql = "SELECT d.director_name   FROM directors AS d WHERE director_id = ? " +
                 "JOIN film_director AS fd ON d.director_id = fd.director_id" +
                 " JOIN likes AS l ON fd.film_id = l.film_id WHERE COUNT(user_id) AS count_likes" +
                 "ORDER BY count_likes";
@@ -350,9 +353,10 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getFilmsByDirectorSortedByYear(long directorId) {
-        String sql = "SELECT director_name FROM diretors AS d WHERE director_id = ? " +
+        String sql = "SELECT d.director_name, film_sort.name, film_sort.release_date " +
+                "FROM directors AS d WHERE d.director_id = ? " +
                 "JOIN film_director AS fd ON d.director_id = fd.diretor_id " +
-                "WHERE fd.film_id IN (SELECT name, release_date FROM film" +
+                "WHERE fd.film_id IN (SELECT * FROM film" +
                 "ORDER BY release_date DESC) AS film_sort";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rowMapperFilm(rs), directorId);
     }

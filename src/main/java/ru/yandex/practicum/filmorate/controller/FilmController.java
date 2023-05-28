@@ -143,9 +143,9 @@ public class FilmController {
         log.info("Удален фильм с айди - {}", id);
     }
 
-    @GetMapping("/director/{directorId}?sortBy=[year,likes]")
+    @GetMapping("/director/{directorId}")
     public List<Film> getFilmsByDirector(
-            @PathVariable Long directorId,
+            @PathVariable long directorId,
             @RequestParam(name = "sortBy", defaultValue = "year") String sortBy
     ) {
         if (sortBy.equals("likes")) {
