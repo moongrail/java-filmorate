@@ -43,8 +43,6 @@ public class DirectorStorageDb implements DirectorStorage {
     @SneakyThrows
     @Override
     public Director addDirector(Director director) {
-        String sql = "INSERT INTO directors(director_name) VALUES (?)";
-
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("directors")
                 .usingGeneratedKeyColumns("director_id");
         long id = simpleJdbcInsert.executeAndReturnKey(director.directors()).longValue();

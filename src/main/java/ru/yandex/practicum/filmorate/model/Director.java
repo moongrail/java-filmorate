@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class Director {
     private long id;
-    //@NonNull
     @NotBlank
     private String name;
     private final Set<Film> films = new HashSet<>();

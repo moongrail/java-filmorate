@@ -193,11 +193,9 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Optional<Film> getById(Long id) {
         SqlRowSet userRs = jdbcTemplate.queryForRowSet(FIND_FILM_FULL, id);
-        //SqlRowSet directorRs = jdbcTemplate.queryForRowSet(GET_DIRECTORS, id);
 
         if (userRs.next()) {
             Film film = getListOfFilms(FIND_FILM_FULL, id).get(id);
-//getOneDream))
             return Optional.of(film);
         } else {
             return Optional.empty();
@@ -244,9 +242,7 @@ public class FilmDbStorage implements FilmStorage {
             film.setGenres(genres);
 
             Set<Director> directors = new HashSet<>();
-            directors.stream()
-                    .sorted(Comparator.comparing(Director::getId))
-                    .collect(Collectors.toList());
+
             SqlRowSet rsDirectors = jdbcTemplate.queryForRowSet(FIND_DIRECTORS, filmId);
             while (rsDirectors.next()) {
                 Director director = Director.builder()
