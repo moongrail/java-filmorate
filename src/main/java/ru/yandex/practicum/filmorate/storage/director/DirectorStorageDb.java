@@ -20,20 +20,23 @@ import java.util.List;
 @Qualifier("DirectorStorageDb")
 @RequiredArgsConstructor
 public class DirectorStorageDb implements DirectorStorage {
+    public static final String GET_ALL_DIRECTORS = "SELECT * FROM directors";
+    public static final String GET_DIRECTOR_BY_ID = "SELECT * FROM directors WHERE director_id = ?";
+    public static final String UPDATE_DIRECTOR = "UPDATE directors SET director_name = ? WHERE Director_id = ?";
+    public static final String DELETE_DIRECTOR = "DELETE FROM directors WHERE director_id = ?";
+    public static final String ADD_FILMS_DIRECTOR = "INSERT INTO film_director (director_id, film_id) VALUES (?, ?)";
+    public static final String DELETE_ALL_FILMS_BY_DIRECTOR = "DELETE FROM film_director WHERE director_id = ?";
     private final JdbcTemplate jdbcTemplate;
-
 
     @Override
     public List<Director> getAllDirectors() {
-        String sql = "SELECT * FROM directors";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToDirector(rs));
+        return jdbcTemplate.query(GET_ALL_DIRECTORS, (rs, rowNum) -> mapRowToDirector(rs));
     }
 
     @Override
     public Director getDirectorById(long id) {
-        String sql = "SELECT * FROM directors WHERE director_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> mapRowToDirector(rs), id); //id->director
+            return jdbcTemplate.queryForObject(GET_DIRECTOR_BY_ID, (rs, rowNum) -> mapRowToDirector(rs), id); //id->director
         } catch (DataRetrievalFailureException e) {
             log.warn("Режиссёр с id {} не найден ", id);
             throw new DirectorNotFoundException("Режиссёр не найден" + id);
@@ -47,15 +50,13 @@ public class DirectorStorageDb implements DirectorStorage {
                 .usingGeneratedKeyColumns("director_id");
         long id = simpleJdbcInsert.executeAndReturnKey(director.directors()).longValue();
         director.setId(id);
-//        director.getFilms().forEach(film -> addFilmsDirector(id, film.getId()));
         log.info("Режиссёр {} сохранен ", director.getName());
         return director;
     }
 
     @Override
     public Director updateDirector(Director director) {
-        String sql = "UPDATE directors SET director_name = ? WHERE Director_id = ?";
-        if (jdbcTemplate.update(sql, director.getName(), director.getId()) > 0) {
+        if (jdbcTemplate.update(UPDATE_DIRECTOR, director.getName(), director.getId()) > 0) {
             return director;
         }
         log.warn("Режиссёр с id {} не найден ", director.getId());
@@ -64,26 +65,23 @@ public class DirectorStorageDb implements DirectorStorage {
 
     @Override
     public void deleteDirector(long id) {
-        String sql = "DELETE FROM directors WHERE director_id = ?";
         if (getDirectorById(id) == null) {
             log.warn("Запрашиваемый режиссёр {} отсутствует и не может быть удалён", id);
             throw new DirectorNotFoundException("Режиссёр не найден" + id);
         }
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(DELETE_DIRECTOR, id);
         deleteAllFilmsByDirector(id);
         log.info("Режиссёр {}  удалён", id);
     }
 
     @Override
     public boolean addFilmsDirector(long directorId, long fimId) {
-        String sql = "INSERT INTO film_director (director_id, film_id) VALUES (?, ?)";
-        return jdbcTemplate.update(sql, directorId, fimId) > 0;
+        return jdbcTemplate.update(ADD_FILMS_DIRECTOR, directorId, fimId) > 0;
     }
 
 
     public boolean deleteAllFilmsByDirector(long directorId) {
-        String sql = "DELETE FROM film_director WHERE director_id = ?";
-        return jdbcTemplate.update(sql, directorId) > 0;
+        return jdbcTemplate.update(DELETE_ALL_FILMS_BY_DIRECTOR, directorId) > 0;
     }
 
     private Director mapRowToDirector(ResultSet rs) throws SQLException {
