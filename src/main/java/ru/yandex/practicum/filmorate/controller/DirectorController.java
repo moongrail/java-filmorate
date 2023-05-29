@@ -90,5 +90,4 @@ public class DirectorController {
         directorService.deleteDirector(id);
         log.info("Режиссёр удалён - {} ", id);
     }
-
 }

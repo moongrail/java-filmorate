@@ -13,7 +13,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -40,9 +39,7 @@ public class Film {
     @Builder.Default
     private Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));
 
-    public List<Director> getDirector() {
-        return directors.stream()
-                .sorted(Comparator.comparing(Director::getId))
-                .collect(Collectors.toList());
+    public Long sumLikes() {
+        return (long) usersWhoLike.size();
     }
 }

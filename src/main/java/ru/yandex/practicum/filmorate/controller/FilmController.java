@@ -16,7 +16,10 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/films")
@@ -153,5 +156,24 @@ public class FilmController {
         } else {
             return filmService.getFilmsByDirectorSortedByYear(directorId);
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Film>> searchFilms(@RequestParam("query") String query,
+                                                  @RequestParam("by") String by) {
+        List<Film> films = new ArrayList<>();
+        if (by.contains("title")) {
+            films.addAll(filmService.findByTitleContainingIgnoreCase(query));
+        }
+        if (by.contains("director")) {
+            films.addAll(filmService.findByDirectorsNameContainingIgnoreCase(query));
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(films.stream()
+                        .sorted(Comparator.comparing(Film::sumLikes).reversed())
+                        .collect(Collectors.toList()));
     }
 }

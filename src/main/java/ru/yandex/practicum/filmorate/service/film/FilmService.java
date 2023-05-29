@@ -32,4 +32,8 @@ public interface FilmService {
     List<Film> getFilmsByDirectorSortedByLikes(long directorId);
 
     List<Film> getFilmsByDirectorSortedByYear(long directorId);
+
+    List<Film> findByTitleContainingIgnoreCase(String query);
+
+    List<Film> findByDirectorsNameContainingIgnoreCase(String query);
 }

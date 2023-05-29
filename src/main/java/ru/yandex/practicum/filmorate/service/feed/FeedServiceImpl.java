@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.feed;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Feed;
@@ -9,15 +10,11 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
 
     private final FeedStorage feedStorage;
     private final UserStorage userStorage;
-
-    public FeedServiceImpl(FeedStorage feedStorage, UserStorage userStorage) {
-        this.feedStorage = feedStorage;
-        this.userStorage = userStorage;
-    }
 
     @Override
     public List<Feed> getFeeds(Long userId) {
