@@ -36,7 +36,7 @@ public class DirectorStorageDb implements DirectorStorage {
     @Override
     public Director getDirectorById(long id) {
         try {
-            return jdbcTemplate.queryForObject(GET_DIRECTOR_BY_ID, (rs, rowNum) -> mapRowToDirector(rs), id); //id->director
+            return jdbcTemplate.queryForObject(GET_DIRECTOR_BY_ID, (rs, rowNum) -> mapRowToDirector(rs), id);
         } catch (DataRetrievalFailureException e) {
             log.warn("Режиссёр с id {} не найден ", id);
             throw new DirectorNotFoundException("Режиссёр не найден" + id);
