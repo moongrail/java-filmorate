@@ -159,7 +159,7 @@ public class FilmController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Film>> searchFilms(@RequestParam("query") String query ,
+    public ResponseEntity<List<Film>> searchFilms(@RequestParam("query") String query,
                                                   @RequestParam("by") String by) {
         List<Film> films = new ArrayList<>();
         if (by.contains("title")) {
