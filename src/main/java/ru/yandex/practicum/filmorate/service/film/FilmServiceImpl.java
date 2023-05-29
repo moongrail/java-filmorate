@@ -141,8 +141,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film getById(Long id) {
         Optional<Film> filmOptional = filmStorage.getById(id);
-//здесь хотела вытащить по directorStorage.getAllDirectors()
-        //и потом сортировать
+
         if (filmOptional.isEmpty()) {
             throw new FilmNotFoundException("Фильма с таким айди нет.");
         }

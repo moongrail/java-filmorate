@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class SlopeOneUtil {
 
-    private static Map<Film, Map<Film, Double>> diff = new HashMap<>();
-    private static Map<Film, Map<Film, Integer>> freq = new HashMap<>();
+    private static final Map<Film, Map<Film, Double>> diff = new HashMap<>();
+    private static final Map<Film, Map<Film, Integer>> freq = new HashMap<>();
     private static Map<User, Map<Film, Double>> inputData;
-    private static Map<User, Map<Film, Double>> outputData = new HashMap<>();
+    private static final Map<User, Map<Film, Double>> outputData = new HashMap<>();
     public static User forUser;
 
 
