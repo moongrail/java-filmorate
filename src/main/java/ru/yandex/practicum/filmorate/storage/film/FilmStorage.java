@@ -31,4 +31,8 @@ public interface FilmStorage {
     List<Film> getFilmsByDirectorSortedByLikes(long directorId);
 
     List<Film> getFilmsByDirectorSortedByYear(long directorId);
+
+    List<Film> findByDirectorsNameContainingIgnoreCase(String query);
+
+    List<Film> findByTitleContainingIgnoreCase(String query);
 }

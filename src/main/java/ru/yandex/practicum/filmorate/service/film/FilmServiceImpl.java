@@ -170,7 +170,7 @@ public class FilmServiceImpl implements FilmService {
         if (year > 0) {
             films.removeIf(f -> f.getReleaseDate().getYear() != year);
         }
-        return films.stream().sorted(Comparator.comparing(Film::getRate).reversed())
+        return films.stream().sorted(Comparator.comparing(Film::sumLikes).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
     }
@@ -202,5 +202,15 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getFilmsByDirectorSortedByYear(long directorId) {
         directorStorage.getDirectorById(directorId);
         return filmStorage.getFilmsByDirectorSortedByYear(directorId);
+    }
+
+    @Override
+    public List<Film> findByDirectorsNameContainingIgnoreCase(String query) {
+        return filmStorage.findByDirectorsNameContainingIgnoreCase(query);
+    }
+
+    @Override
+    public List<Film> findByTitleContainingIgnoreCase(String query) {
+        return filmStorage.findByTitleContainingIgnoreCase(query);
     }
 }

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface FilmService {
@@ -32,4 +33,8 @@ public interface FilmService {
     List<Film> getFilmsByDirectorSortedByLikes(long directorId);
 
     List<Film> getFilmsByDirectorSortedByYear(long directorId);
+
+    List<Film> findByTitleContainingIgnoreCase(String query);
+
+    List<Film> findByDirectorsNameContainingIgnoreCase(String query);
 }

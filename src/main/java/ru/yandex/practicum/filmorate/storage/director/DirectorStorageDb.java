@@ -47,7 +47,7 @@ public class DirectorStorageDb implements DirectorStorage {
                 .usingGeneratedKeyColumns("director_id");
         long id = simpleJdbcInsert.executeAndReturnKey(director.directors()).longValue();
         director.setId(id);
-        director.getFilms().forEach(film -> addFilmsDirector(id, film.getId()));
+//        director.getFilms().forEach(film -> addFilmsDirector(id, film.getId()));
         log.info("Режиссёр {} сохранен ", director.getName());
         return director;
     }
@@ -56,8 +56,6 @@ public class DirectorStorageDb implements DirectorStorage {
     public Director updateDirector(Director director) {
         String sql = "UPDATE directors SET director_name = ? WHERE Director_id = ?";
         if (jdbcTemplate.update(sql, director.getName(), director.getId()) > 0) {
-            deleteAllFilmsByDirector(director.getId());
-            director.getFilms().forEach(film -> addFilmsDirector(director.getId(), film.getId()));
             return director;
         }
         log.warn("Режиссёр с id {} не найден ", director.getId());
