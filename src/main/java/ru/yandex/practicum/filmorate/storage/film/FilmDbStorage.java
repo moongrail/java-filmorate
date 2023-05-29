@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Primary
 public class FilmDbStorage implements FilmStorage {
-    public static final String FIND_BY_DIRECTORS_NAME_CONTAINING_IGNORE_CASE = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME, m.*, likes.COUNT_LIKE, d.*" +
-            "FROM DIRECTORS AS d " +
+    public static final String FIND_BY_DIRECTORS_NAME_CONTAINING_IGNORE_CASE = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME," +
+            " m.*, likes.COUNT_LIKE, d.* FROM DIRECTORS AS d " +
             "LEFT JOIN film_director fd ON fd.director_id = d.director_id " +
             "LEFT JOIN FILM AS f ON f.FILM_ID = fd.FILM_ID " +
             "LEFT JOIN FILM_GENRE AS g ON f.FILM_ID = g.FILM_ID " +
@@ -39,8 +39,8 @@ public class FilmDbStorage implements FilmStorage {
             "f.FILM_ID = likes.FILM_ID " +
             "WHERE d.director_name ILIKE ?" +
             "ORDER BY likes.COUNT_LIKE DESC";
-    public static final String FIND_BY_TITLE_CONTAINING_IGNORE_CASE = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME, m.*, likes.COUNT_LIKE " +
-            "FROM FILM AS f " +
+    public static final String FIND_BY_TITLE_CONTAINING_IGNORE_CASE = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME, m.*," +
+            " likes.COUNT_LIKE FROM FILM AS f " +
             "LEFT JOIN FILM_GENRE AS g ON f.FILM_ID = g.FILM_ID " +
             "LEFT JOIN GENRE AS l ON g.GENRE_ID = l.GENRE_ID " +
             "LEFT JOIN FILM_MPA fm ON f.FILM_ID = fm.FILM_ID " +
@@ -49,8 +49,8 @@ public class FilmDbStorage implements FilmStorage {
             "f.FILM_ID = likes.FILM_ID " +
             "WHERE f.name ILIKE ? " +
             "ORDER BY likes.COUNT_LIKE DESC";
-    public static final String GET_FILMS_BY_DIRECTOR_SORTED_BY_YEAR = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME, m.*, likes.COUNT_LIKE, d.*" +
-            "FROM DIRECTORS AS d " +
+    public static final String GET_FILMS_BY_DIRECTOR_SORTED_BY_YEAR = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME, m.*," +
+            " likes.COUNT_LIKE, d.* FROM DIRECTORS AS d " +
             "LEFT JOIN film_director fd ON fd.director_id = d.director_id " +
             "LEFT JOIN FILM AS f ON f.FILM_ID = fd.FILM_ID " +
             "LEFT JOIN FILM_GENRE AS g ON f.FILM_ID = g.FILM_ID " +
@@ -60,8 +60,8 @@ public class FilmDbStorage implements FilmStorage {
             "LEFT JOIN (SELECT FILM_ID, COUNT(USER_ID) AS COUNT_LIKE FROM LIKES GROUP BY FILM_ID) AS likes ON " +
             "f.FILM_ID = likes.FILM_ID WHERE d.DIRECTOR_ID= ? " +
             "ORDER BY f.RELEASE_DATE";
-    public static final String GET_FILMS_BY_DIRECTOR_SORTED_BY_LIKES = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME, m.*, likes.COUNT_LIKE, d.* " +
-            "FROM DIRECTORS AS d " +
+    public static final String GET_FILMS_BY_DIRECTOR_SORTED_BY_LIKES = "SELECT f.*, l.GENRE_ID, l.GENRE_NAME, m.*," +
+            " likes.COUNT_LIKE, d.* FROM DIRECTORS AS d " +
             "LEFT JOIN film_director fd ON fd.director_id = d.director_id " +
             "LEFT JOIN FILM AS f ON f.FILM_ID = fd.FILM_ID " +
             "LEFT JOIN FILM_GENRE AS g ON f.FILM_ID = g.FILM_ID " +
@@ -76,14 +76,13 @@ public class FilmDbStorage implements FilmStorage {
     private static final String INSERT_FILM = "INSERT INTO film(name,description,release_date,duration,rate)" +
             " VALUES (?,?,?,?,?)";
     private static final String FIND_ALL_FILMS = "SELECT f.film_id AS ID, f.name, f.RELEASE_DATE, F.DESCRIPTION," +
-            " f.duration, f.rate, m.mpa_id, " +
-            "mp.mpa_name FROM FILM F " +
+            " f.duration, f.rate, m.mpa_id, mp.mpa_name FROM FILM F " +
             "LEFT JOIN FILM_MPA M ON F.FILM_ID = M.FILM_ID " +
             "LEFT JOIN MPA MP ON M.MPA_ID = MP.MPA_ID " +
             "ORDER BY F.FILM_ID ";
 
-    private static final String FIND_FILMS_LIKED_BY_USER = "SELECT f.film_id AS ID, f.name, f.RELEASE_DATE, F.DESCRIPTION, " +
-            "f.duration, f.rate, m.mpa_id, l.user_id, " +
+    private static final String FIND_FILMS_LIKED_BY_USER = "SELECT f.film_id AS ID, f.name, f.RELEASE_DATE," +
+            " F.DESCRIPTION, f.duration, f.rate, m.mpa_id, l.user_id, " +
             "mp.mpa_name FROM FILM F " +
             "LEFT JOIN FILM_MPA M ON F.FILM_ID = M.FILM_ID " +
             "LEFT JOIN MPA MP ON M.MPA_ID = MP.MPA_ID " +
