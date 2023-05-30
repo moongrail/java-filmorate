@@ -153,9 +153,9 @@ public class FilmController {
     ) {
         if (sortBy.equals("likes")) {
             return filmService.getFilmsByDirectorSortedByLikes(directorId);
-        } else {
-            return filmService.getFilmsByDirectorSortedByYear(directorId);
         }
+
+        return filmService.getFilmsByDirectorSortedByYear(directorId);
     }
 
     @GetMapping("/search")
