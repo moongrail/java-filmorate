@@ -24,4 +24,16 @@ public interface FilmService {
     Film getById(Long id);
 
     Film getFilmFull(Long id);
+
+    List<Film> getPopularFilmsByParameters(Short count, Long genreId, Integer year);
+
+    List<Film> getCommonFilms(Long userId, Long friendId);
+
+    List<Film> getFilmsByDirectorSortedByLikes(long directorId);
+
+    List<Film> getFilmsByDirectorSortedByYear(long directorId);
+
+    List<Film> findByTitleContainingIgnoreCase(String query);
+
+    List<Film> findByDirectorsNameContainingIgnoreCase(String query);
 }

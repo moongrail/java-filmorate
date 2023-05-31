@@ -11,11 +11,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.adapter.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.feed.FeedService;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/films")
@@ -23,6 +27,7 @@ import java.util.List;
 @Slf4j
 public class FilmController {
     private final FilmService filmService;
+    private final FeedService feedService;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
@@ -80,7 +85,9 @@ public class FilmController {
     public ResponseEntity<String> addLikeFilm(@PathVariable Long id,
                                               @PathVariable Long userId) {
 
-        filmService.addLike(id,userId);
+        filmService.addLike(id, userId);
+        feedService.saveAddLike(userId, id);
+
         log.info("Лайк поставлен фильм с айди - {}", id);
 
         return ResponseEntity
@@ -90,10 +97,13 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public ResponseEntity<String> removeLikeFilm(@PathVariable String id,
-                                              @PathVariable String userId) {
 
-        filmService.removeLike(Long.valueOf(id),Long.valueOf(userId));
+    public ResponseEntity<String> removeLikeFilm(@PathVariable Long id,
+                                                 @PathVariable Long userId) {
+
+        filmService.removeLike(id, userId);
+        feedService.saveRemoveLike(userId, id);
+
         log.info("Лайк убран. фильм с айди - {}", id);
 
         return ResponseEntity
@@ -103,15 +113,14 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<String> getPopularFilms(@RequestParam(defaultValue = "10") String count) {
-
-        List<Film> popularFilms = filmService.getPopularFilms(Short.parseShort(count));
-        log.info("Выданы популярные фильмы, число - {}", count);
-
+    public ResponseEntity<String> getPopularFilms(@RequestParam(required = false, defaultValue = "10") Short count,
+                                                  @RequestParam(required = false, defaultValue = "0") Long genreId,
+                                                  @RequestParam(required = false, defaultValue = "0") Integer year) {
+        log.info("GET request with parameters: count = {}, genreId = {}, date = {}", count, genreId, year);
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(popularFilms));
+                .body(gson.toJson(filmService.getPopularFilmsByParameters(count, genreId, year)));
     }
 
     @GetMapping("/{id}")
@@ -124,5 +133,47 @@ public class FilmController {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(film));
+    }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam Long userId, @RequestParam Long friendId) {
+        return filmService.getCommonFilms(userId, friendId);
+    }
+
+    @DeleteMapping("/{id}")
+    public void removeFilm(@PathVariable long id) {
+        filmService.deleteById(id);
+        log.info("Удален фильм с айди - {}", id);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public List<Film> getFilmsByDirector(
+            @PathVariable long directorId,
+            @RequestParam(name = "sortBy", defaultValue = "year") String sortBy
+    ) {
+        if (sortBy.equals("likes")) {
+            return filmService.getFilmsByDirectorSortedByLikes(directorId);
+        }
+
+        return filmService.getFilmsByDirectorSortedByYear(directorId);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Film>> searchFilms(@RequestParam("query") String query,
+                                                  @RequestParam("by") String by) {
+        List<Film> films = new ArrayList<>();
+        if (by.contains("title")) {
+            films.addAll(filmService.findByTitleContainingIgnoreCase(query));
+        }
+        if (by.contains("director")) {
+            films.addAll(filmService.findByDirectorsNameContainingIgnoreCase(query));
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(films.stream()
+                        .sorted(Comparator.comparing(Film::sumLikes).reversed())
+                        .collect(Collectors.toList()));
     }
 }

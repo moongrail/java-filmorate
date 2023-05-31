@@ -10,6 +10,12 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 @RestControllerAdvice(basePackages = "ru.yandex.practicum.filmorate.controller")
 public class ErrorHandler {
 
+    @ExceptionHandler(DirectorNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleDirectorNotFoundException(DirectorNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIncorrectParameterException(final IncorrectParameterException e) {
@@ -34,6 +40,12 @@ public class ErrorHandler {
         );
     }
 
+    @ExceptionHandler(ReviewNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlerValidationException(ReviewNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
     @ExceptionHandler(MpaNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handlerValidationException(MpaNotFoundException e) {
@@ -45,4 +57,6 @@ public class ErrorHandler {
     public ErrorResponse handlerValidationException(GenreNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+
 }

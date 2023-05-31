@@ -1,10 +1,16 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.validate.ValidDateFilm;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -26,8 +32,14 @@ public class Film {
     private Integer duration;
     @Builder.Default
     private Set<Long> usersWhoLike = new HashSet<>();
+    @Builder.Default
+    private Set<Director> directors = new HashSet<>();
     private long rate;
     private Mpa mpa;
     @Builder.Default
     private Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));
+
+    public Long sumLikes() {
+        return (long) usersWhoLike.size();
+    }
 }

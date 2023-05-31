@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.director.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.*;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
+    private final DirectorStorage directorStorage;
 
     @Override
     public Film add(Film film) {
@@ -94,6 +97,7 @@ public class FilmServiceImpl implements FilmService {
         }
 
         filmStorage.removeLike(id, userId);
+
         Film film = filmStorageById.get();
 
         if (film.getRate() > 1) {
@@ -153,5 +157,59 @@ public class FilmServiceImpl implements FilmService {
             throw new FilmNotFoundException("Фильма с таким айди нет.");
         }
         return filmFull;
+    }
+
+    @Override
+    public List<Film> getPopularFilmsByParameters(Short count, Long genreId, Integer year) {
+        if (genreId == 0 && year == 0) return getPopularFilms(count);
+        List<Film> films = filmStorage.getTheMostPopularFilms(Short.MAX_VALUE);
+        if (genreId > 0) {
+            films.removeIf(f -> !(getGenreIdsForCurrentFilm(f).contains(genreId)));
+        }
+        if (year > 0) {
+            films.removeIf(f -> f.getReleaseDate().getYear() != year);
+        }
+        return films.stream().sorted(Comparator.comparing(Film::sumLikes).reversed())
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
+        List<Film> userFilms = filmStorage.getFilmsLikedByUser(userId);
+        List<Film> friendFilms = filmStorage.getFilmsLikedByUser(friendId);
+        List<Long> friendFilmsIds = friendFilms.stream()
+                .map(Film::getId)
+                .collect(Collectors.toList());
+        return userFilms.stream()
+                .filter(x -> friendFilmsIds.contains(x.getId()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> getGenreIdsForCurrentFilm(Film film) {
+        Set<Genre> genres = film.getGenres();
+        return genres.stream().map(Genre::getId).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectorSortedByLikes(long directorId) {
+        directorStorage.getDirectorById(directorId);
+        return filmStorage.getFilmsByDirectorSortedByLikes(directorId);
+    }
+
+    @Override
+    public List<Film> getFilmsByDirectorSortedByYear(long directorId) {
+        directorStorage.getDirectorById(directorId);
+        return filmStorage.getFilmsByDirectorSortedByYear(directorId);
+    }
+
+    @Override
+    public List<Film> findByDirectorsNameContainingIgnoreCase(String query) {
+        return filmStorage.findByDirectorsNameContainingIgnoreCase(query);
+    }
+
+    @Override
+    public List<Film> findByTitleContainingIgnoreCase(String query) {
+        return filmStorage.findByTitleContainingIgnoreCase(query);
     }
 }

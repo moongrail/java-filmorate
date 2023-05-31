@@ -4,15 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.util.recomendation.SlopeOneUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
 
     @Override
     public User add(User user) {
@@ -89,7 +94,6 @@ public class UserServiceImpl implements UserService {
             }
 
             userStorage.removeFriend(idFrom, idTo);
-
         } else {
             throw new UserNotFoundException("Пользователя с таким айди нет в списке друзей.");
         }
@@ -176,6 +180,25 @@ public class UserServiceImpl implements UserService {
         }
 
         return user.get();
+    }
+
+    @Override
+    public List<Film> getRecommendations(Long id) {
+        List<User> users = userStorage.getAll();
+        List<Film> films = filmStorage.getAll();
+        Map<User, Map<Film, Double>> data = new HashMap<>();
+        for (User user : users) {
+            Map<Film, Double> likedFilms = films.stream()
+                    .filter(x -> x.getUsersWhoLike().contains(user.getId()))
+                    .collect(Collectors.toMap(x -> x, y -> 1.0));
+            data.put(user, likedFilms);
+        }
+        SlopeOneUtil.forUser = getById(id);
+        SlopeOneUtil.slopeOne(data);
+        //Ограничиваю рекомендации пятью фильмами
+        return SlopeOneUtil.slopeOne(data).stream()
+                .filter(x -> !x.getUsersWhoLike().contains(id))
+                .limit(5).collect(Collectors.toList());
     }
 
     private static void setNameIfItEmpty(User user) {
